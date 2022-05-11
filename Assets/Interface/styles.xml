@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty>
+    <!-- include the style file for the standard controls -->
+    <useStyles filename="nifty-default-styles.xml" />
+
+    <!-- include the standard controls -->
+    <useControls filename="nifty-default-controls.xml" />
+</nifty>
+
+
+
