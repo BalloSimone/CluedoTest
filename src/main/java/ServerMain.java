@@ -71,16 +71,17 @@ public class ServerMain extends SimpleApplication {
     private class lobbyClass{
         private int idLobby;
         private HostedConnection GameHost;
-        private final List<UserManager> userInLobbyInfo = new ArrayList<UserManager>();
+        private final List<ClientInformation> userInLobbyInfo = new ArrayList<ClientInformation>();
         private final Collection<HostedConnection> usersInLobby = new ArrayList<HostedConnection>();
         private boolean CanSomeoneEntry;
         private boolean isInGame;
 
         public lobbyClass(){}
 
-        public lobbyClass(HostedConnection user){
+        public lobbyClass(HostedConnection user, ClientInformation usInfo){
             CanSomeoneEntry = true;
             isInGame = false;
+            userInLobbyInfo.add(usInfo);
             usersInLobby.add(user);
             GameHost = user;
 
@@ -123,12 +124,12 @@ public class ServerMain extends SimpleApplication {
                 System.out.println("" + mess.getRequest() + "' from client " + source.getId());
 
                 String request = mess.getRequest();
-
+                ClientInformation sourceInfo = mess.getSourceInfo();
 
 
                 if(request.equals("0")){
                     //crea una nuova lobby al di la delle lobby con posti disponibili
-                    activeLobbies.add(new lobbyClass(source));
+                    activeLobbies.add(new lobbyClass(source, sourceInfo));
                 }else if(request.equals("1")) {
                     //Entra nella prima lobby con un posto libero, se non ci sono lobby con un posto libero allora entra in una lobby come host
                     try {
@@ -136,15 +137,16 @@ public class ServerMain extends SimpleApplication {
                         for(lobbyClass lobby: activeLobbies){
                             if (lobby != null && lobby.usersInLobby.size() < 6 && lobby.CanSomeoneEntry) {
                                 lobby.usersInLobby.add(source);
+                                lobby.userInLobbyInfo.add(sourceInfo);
                                 return;
                             }
                         }
                         //se il client non ha trovato una lobby, allora ne entra in una nuova come host
-                        activeLobbies.add(new lobbyClass(source));
+                        activeLobbies.add(new lobbyClass(source, sourceInfo));
 
                     } catch (IndexOutOfBoundsException e) {
                         //nel caso in cui non ci siano lobby ne viene creata una nuova in cui il client diventa l'host
-                        activeLobbies.add(new lobbyClass(source));
+                        activeLobbies.add(new lobbyClass(source, sourceInfo));
                     }
                 }
             }else if(m instanceof UtNetworking.LobbyDebugMess){

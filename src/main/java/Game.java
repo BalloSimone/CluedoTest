@@ -103,7 +103,7 @@ public class Game extends SimpleApplication {
         nifty.loadControlFile("nifty-default-controls.xml");
 
         //caricamento della classe contenente la GUI
-        gui = new GUI(nifty, client, cInfo);
+        gui = new GUI(nifty, client, new ClientInformation());
 
 
         nifty.gotoScreen("loginScreen"); // start the screen

@@ -45,7 +45,7 @@ public class UtNetworking {
             this.sourceInfo = sourceInfo;
         }
 
-
+        public ClientInformation getSourceInfo(){return sourceInfo;}
         public String getRequest(){
             return request;
         }
