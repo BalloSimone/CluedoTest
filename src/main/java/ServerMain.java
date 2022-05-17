@@ -1,6 +1,8 @@
 import com.jme3.app.SimpleApplication;
 import com.jme3.network.*;
 import com.jme3.system.JmeContext;
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ public class ServerMain extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         try {
-            DataDB database = new DataDB("root", "password", "usersClue");
+            DataDB database = new DataDB("root", "", "usersClue");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -95,16 +97,23 @@ public class ServerMain extends SimpleApplication {
     }
 
     private void insertNewUser(String nomeUtente, String password) throws SQLException {
-        database.stmt.executeUpdate("INSERT INTO tutenti(nomeUtente, password) VALUES(\""+nomeUtente+"\" ,\""+password+"\")");
+        String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
+        //System
+        database.stmt.executeUpdate("INSERT INTO tutenti(nomeUtente, password) VALUES(\""+nomeUtente+"\" ,\""+hashed+"\")");
     }
 
     private int checkUsrPass(String nomeUtente, String password) throws SQLException{
         String id = ""+0;
-        ResultSet rs = database.stmt.executeQuery("SELECT id, nomeUtente, password from tutenti WHERE nomeUtente = \""+nomeUtente+"\" AND password = \""+password+"\"");
+
+        ResultSet rs = database.stmt.executeQuery("SELECT id, nomeUtente, password from tutenti WHERE nomeUtente = \""+nomeUtente+"\"");
         if(rs.getMetaData().getColumnCount() > 0){
             rs.next();
             id = rs.getString(1);
-            return Integer.parseInt(id);
+            String hashed = rs.getString(3);
+            if(BCrypt.checkpw(password, hashed))
+                return Integer.parseInt(id);
+            else
+                return -1;
         }
         else return -1;
     }
