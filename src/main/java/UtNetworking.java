@@ -3,6 +3,8 @@ import com.jme3.network.HostedConnection;
 import com.jme3.network.serializing.Serializable;
 import com.jme3.network.serializing.Serializer;
 
+import java.nio.ByteBuffer;
+
 public class UtNetworking {
     public static final int PORT = 6000;
 
@@ -12,6 +14,7 @@ public class UtNetworking {
         Serializer.registerClass(LobbyDebugMess.class);
         Serializer.registerClass(DBMess.class);
         Serializer.registerClass(CheckLogin.class);
+        Serializer.registerClass(ClientInformation.class);
     }
 
     @Serializable

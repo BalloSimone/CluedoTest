@@ -1,3 +1,6 @@
+import com.jme3.network.serializing.Serializable;
+
+@Serializable
 public class ClientInformation {
     private int id;
     private String UserName;
