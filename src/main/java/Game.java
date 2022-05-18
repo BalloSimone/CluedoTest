@@ -282,7 +282,7 @@ public class Game extends SimpleApplication {
                     Element elementPopUp = nifty.createPopup("registrationFailedPopUp");
                     elementPopUp.setWidth(100);
                     elementPopUp.setHeight(100);
-                    nifty.showPopup(Objects.requireNonNull(nifty.getCurrentScreen()), elementPopUp.getId(), null);
+                    nifty.showPopup(Objects.requireNonNull(nifty.getCurrentScreen()), Objects.requireNonNull(elementPopUp.getId()), null);
                 }
             }
         }

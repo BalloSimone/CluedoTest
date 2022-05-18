@@ -1,6 +1,7 @@
 import com.jme3.app.Application;
 import com.jme3.app.state.BaseAppState;
 import com.jme3.network.Client;
+import de.lessvoid.nifty.EndNotify;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.TextField;
 import de.lessvoid.nifty.screen.Screen;
@@ -97,7 +98,12 @@ public class GameController extends BaseAppState implements ScreenController {
     }
 
     public void closePopUp(String id){
-        niftyHostConnected.closePopup(id);
+        niftyHostConnected.getCurrentScreen().closePopup(niftyHostConnected.getTopMostPopup(), new EndNotify() {
+            @Override
+            public void perform() {
+
+            }
+        });
     }
 
 }

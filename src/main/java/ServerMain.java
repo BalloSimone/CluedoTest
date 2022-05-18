@@ -183,7 +183,7 @@ public class ServerMain extends SimpleApplication {
                     } catch (SQLException e) {}
                 }else if(request.equals("login")){
                     try {
-                        id =  checkUsrPass(""+dbMess.getUserName(),""+dbMess.getPassword());
+                        id = checkUsrPass(""+dbMess.getUserName(),""+dbMess.getPassword());
                     } catch (SQLException e) {}
 
                     if(id > 0) {

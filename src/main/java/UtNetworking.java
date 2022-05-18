@@ -119,6 +119,30 @@ public class UtNetworking {
 
     }
 
+    public static class PlayingMessage extends AbstractMessage{
+        private int nTurno;
+        private int x, y;
+
+        public PlayingMessage(){};
+
+        public PlayingMessage(int nTurno, int x, int y){
+            this.nTurno=nTurno;
+            this.x=x;
+            this.y=y;
+        }
+
+        public int getTurno(){
+            return nTurno;
+        }
+        public int getX(){return x;}
+        public int getY() {return y;}
+
+
+
+
+
+    }
+
 
 
 }
