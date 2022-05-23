@@ -17,6 +17,10 @@ public class ServerMain extends SimpleApplication {
     Server gameServer;
     List<lobbyClass> activeLobbies = new LinkedList<lobbyClass>(){};
     DataDB database;
+
+
+
+
     public static void main(String[] args) throws Exception {
         UtNetworking.initialiseSerializables();
         ServerMain app = new ServerMain();

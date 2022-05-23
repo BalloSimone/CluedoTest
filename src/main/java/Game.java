@@ -278,6 +278,7 @@ public class Game extends SimpleApplication {
                     gui.cInfo.setUserName(username);
 
                     cInfo = new ClientInformation(Integer.parseInt(id), username);
+
                 }else{
                     Element elementPopUp = nifty.createPopup("registrationFailedPopUp");
                     elementPopUp.setWidth(100);
