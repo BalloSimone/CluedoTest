@@ -4,6 +4,7 @@ import com.jme3.network.serializing.Serializable;
 import com.jme3.network.serializing.Serializer;
 
 import java.nio.ByteBuffer;
+import java.util.List;
 
 public class UtNetworking {
     public static final int PORT = 6000;
@@ -15,7 +16,10 @@ public class UtNetworking {
         Serializer.registerClass(DBMess.class);
         Serializer.registerClass(CheckLogin.class);
         Serializer.registerClass(ClientInformation.class);
+        Serializer.registerClass(PlayingMessage.class);
+        Serializer.registerClass(LobbyInformation.class);
     }
+
 
     @Serializable
     public static class StartGameMessage extends AbstractMessage{
@@ -36,6 +40,7 @@ public class UtNetworking {
         }
     }
 
+    //messaggio per entrare in una lobby
     @Serializable
     public static class EnterLobbyMessage extends AbstractMessage{
         private String request;
@@ -119,9 +124,10 @@ public class UtNetworking {
 
     }
 
+    @Serializable
     public static class PlayingMessage extends AbstractMessage{
         private int nTurno;
-        private int x, y;
+        private int x, y;//coordinate
 
         public PlayingMessage(){};
 
@@ -138,8 +144,22 @@ public class UtNetworking {
         public int getY() {return y;}
 
 
+    }
+
+    @Serializable
+    public static class LobbyInformation extends AbstractMessage{
+        private List<String> userNames;
+        private String lobbyId;
+        public LobbyInformation(){};
+
+        public LobbyInformation(String lobbyId, List<String> userNames) {
+            this.userNames = userNames;
+            this.lobbyId = lobbyId;
+        }
 
 
+        public List<String> getNames() { return userNames;}
+        public String getLobbyId() {return lobbyId;}
 
     }
 

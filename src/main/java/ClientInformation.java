@@ -11,25 +11,19 @@ public class ClientInformation {
     private String UserName;
     List<String> carteInMano, carteViste;
     HashMap<String, Boolean> note;
-    Point pos;
+    int posX, posY;
     int numeroMosse;
-    String turno;
-    String[][] mappa;
     //ServerMain server;
 
     public ClientInformation(){}
 
+    public ClientInformation(String UserName){
+        this.UserName = UserName;
+    }
+
     public ClientInformation(int id, String UserName){
         this.id = id;
         this.UserName = UserName;
-        pos = new Point();
-        note = new HashMap<String, Boolean>();
-        carteInMano = new LinkedList<>();
-        carteViste = new LinkedList<>();
-        numeroMosse = 0;
-        //server=new ServerMain();
-
-
     }
 
     public void setId(int id){this.id = id;}

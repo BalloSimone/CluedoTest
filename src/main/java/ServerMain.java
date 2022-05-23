@@ -1,14 +1,12 @@
 import com.jme3.app.SimpleApplication;
 import com.jme3.network.*;
+import com.jme3.network.serializing.Serializable;
 import com.jme3.system.JmeContext;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 //gameServer.broadcast(Filters.in(activeLobbies.get(id).usersInLobby));
 
@@ -29,7 +27,7 @@ public class ServerMain extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         try {
-            DataDB database = new DataDB("root", "", "usersClue");
+            DataDB database = new DataDB("root", "password", "usersclue");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,6 +60,7 @@ public class ServerMain extends SimpleApplication {
 
     }
 
+    @Serializable
     private class UserManager{
         ClientInformation cInfo;
         HostedConnection cNetwork;
@@ -75,29 +74,56 @@ public class ServerMain extends SimpleApplication {
 
 
     private class lobbyClass{
-        private int idLobby;
+        private String idLobby;
         private HostedConnection GameHost;
-        private final List<ClientInformation> userInLobbyInfo = new ArrayList<ClientInformation>();
-        private final Collection<HostedConnection> usersInLobby = new ArrayList<HostedConnection>();
+        private final List<UserManager> userInLobbyInfo = new ArrayList<UserManager>();
         private boolean CanSomeoneEntry;
         private boolean isInGame;
 
         public lobbyClass(){}
 
-        public lobbyClass(HostedConnection user, ClientInformation usInfo){
+        public lobbyClass(String id, HostedConnection user, ClientInformation usInfo){
+            this.idLobby = id;
             CanSomeoneEntry = true;
             isInGame = false;
-            userInLobbyInfo.add(usInfo);
-            usersInLobby.add(user);
+            userInLobbyInfo.add(new UserManager(usInfo, user));
             GameHost = user;
 
         }
 
+        public String getIdLobby() { return this.idLobby;}
         public void setLobbyOpened(){ CanSomeoneEntry = true;}
         public void setLobbyClosed(){ CanSomeoneEntry = false;}
         public void startGame(){ isInGame = true;}
 
 
+    }
+
+    private lobbyClass getLobbyById(String lobbyId){
+        for (lobbyClass lobby: activeLobbies) {
+            if(lobby.getIdLobby() == lobbyId)
+                return lobby;
+        }
+        return null;
+    }
+
+    private List<String> getAllUserNames(String lobbyId){
+        List<String>  userNames = new ArrayList<String>();
+        lobbyClass lobby = getLobbyById(lobbyId);
+        for (UserManager user: lobby.userInLobbyInfo) {
+            userNames.add(user.cInfo.getUsername());
+        }
+        return userNames;
+    }
+
+    private String generateNewIdLobby(){
+        String characters = "abcdefghijklmno1234567890";
+        String result = "";
+        for(int i=0; i<10; i++){
+            result += characters.charAt((int)(Math.random() * characters.length()));
+        }
+
+        return result;
     }
 
     private void insertNewUser(String nomeUtente, String password) throws SQLException {
@@ -141,34 +167,54 @@ public class ServerMain extends SimpleApplication {
 
 
                 if(request.equals("0")){
+                    String idLobby = generateNewIdLobby();
                     //crea una nuova lobby al di la delle lobby con posti disponibili
-                    activeLobbies.add(new lobbyClass(source, sourceInfo));
+                    activeLobbies.add(new lobbyClass(idLobby, source, sourceInfo));
+
+                    //ottengo i nomi di tutti gli utenti presenti nella lobby
+                    List<String> listNames = new ArrayList<String>();
+                    listNames = getAllUserNames(idLobby);
+
+                    //invio in risposta al client le informazioni sulla lobby in cui è entrato
+                    gameServer.getConnection(source.getId()).send(new UtNetworking.LobbyInformation(idLobby, listNames));
                 }else if(request.equals("1")) {
+                    String idLobby;
                     //Entra nella prima lobby con un posto libero, se non ci sono lobby con un posto libero allora entra in una lobby come host
                     try {
                         //controlla ogni lobby
                         for(lobbyClass lobby: activeLobbies){
-                            if (lobby != null && lobby.usersInLobby.size() < 6 && lobby.CanSomeoneEntry) {
-                                lobby.usersInLobby.add(source);
-                                lobby.userInLobbyInfo.add(sourceInfo);
+                            if (lobby != null && lobby.userInLobbyInfo.size() < 6 && lobby.CanSomeoneEntry) {
+                                idLobby = lobby.getIdLobby();
+                                lobby.userInLobbyInfo.add(new UserManager(sourceInfo, source)); //nel momento in cui trovo una lobby con dei posti liberi inserisco l'host nella lobby
+
+
+                                //invio a tutti gli user nella lobby le informazioni aggiornate
+                                for (UserManager host: lobby.userInLobbyInfo) {
+                                    gameServer.getConnection(host.cNetwork.getId()).send(new UtNetworking.LobbyInformation(idLobby, getAllUserNames(idLobby)));
+                                }
                                 return;
                             }
                         }
+                        idLobby = generateNewIdLobby();
                         //se il client non ha trovato una lobby, allora ne entra in una nuova come host
-                        activeLobbies.add(new lobbyClass(source, sourceInfo));
+                        activeLobbies.add(new lobbyClass(idLobby, source, sourceInfo));
 
                     } catch (IndexOutOfBoundsException e) {
+                        idLobby = generateNewIdLobby();
                         //nel caso in cui non ci siano lobby ne viene creata una nuova in cui il client diventa l'host
-                        activeLobbies.add(new lobbyClass(source, sourceInfo));
+                        activeLobbies.add(new lobbyClass(idLobby, source, sourceInfo));
                     }
+                    //invio in risposta al client le informazioni sulla lobby in cui è entrato
+                    gameServer.getConnection(source.getId()).send(new UtNetworking.LobbyInformation(idLobby, getAllUserNames(idLobby)));
+
                 }
             }else if(m instanceof UtNetworking.LobbyDebugMess){
                 UtNetworking.LobbyDebugMess mess = (UtNetworking.LobbyDebugMess) m;
                 for(lobbyClass lobby: activeLobbies){
                     System.out.println(lobby.CanSomeoneEntry);
                     System.out.println(lobby.GameHost);
-                    for(HostedConnection host : lobby.usersInLobby ){
-                        System.out.println(host.getId());
+                    for(UserManager host : lobby.userInLobbyInfo ){
+                        System.out.println(host.cNetwork.getId());
                     }
 
 

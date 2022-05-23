@@ -26,6 +26,7 @@ import de.lessvoid.nifty.screen.Screen;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -34,6 +35,8 @@ public class Game extends SimpleApplication {
     Nifty nifty;
     ClientInformation cInfo;
     GUI gui;
+    List<ClientInformation> usersInMyLobby;
+    String MyLobbyId;
 
     public static void main(String[] args) {
         UtNetworking.initialiseSerializables();
@@ -141,6 +144,7 @@ public class Game extends SimpleApplication {
     private void messageListenerInit(){
         client.addMessageListener(new ClientLIstener(), UtNetworking.StartGameMessage.class);
         client.addMessageListener(new ClientLIstener(), UtNetworking.CheckLogin.class);
+        client.addMessageListener(new ClientLIstener(), UtNetworking.LobbyInformation.class);
     }
 
     public void inputListenerInit(){
@@ -258,9 +262,12 @@ public class Game extends SimpleApplication {
         @Override
         public void messageReceived(Client source, Message m) {
             if (m instanceof UtNetworking.StartGameMessage){
+
                 UtNetworking.StartGameMessage mess = (UtNetworking.StartGameMessage) m;
                 System.out.println("Client "+source.getId()+" received: "+mess.getMess());
+
             }else if (m instanceof UtNetworking.CheckLogin){
+
                 UtNetworking.CheckLogin mess = (UtNetworking.CheckLogin) m;
                 String response = mess.getResponse();
                 System.out.println("Server reponse: "+response);
@@ -285,6 +292,27 @@ public class Game extends SimpleApplication {
                     elementPopUp.setHeight(100);
                     nifty.showPopup(Objects.requireNonNull(nifty.getCurrentScreen()), Objects.requireNonNull(elementPopUp.getId()), null);
                 }
+
+
+            }else if (m instanceof UtNetworking.LobbyInformation){
+                //variabile di appoggio
+                List<ClientInformation> app = new ArrayList<ClientInformation>();
+
+                //ottengo dal server l'id della lobby in cui sono entrato e i nomi degli utenti che sono nella mia lobby
+                UtNetworking.LobbyInformation mess = (UtNetworking.LobbyInformation) m;
+                String id = mess.getLobbyId();
+                List<String> usrNames = mess.getNames();
+
+                //mi salvo l'id della mia lobby
+                MyLobbyId = id;
+
+                System.out.println("ID LOBBY: "+id+"   UTENTI: "+usrNames);
+
+                //mi salvo i nomi degli utenti nella mia lobby
+                for (String name: usrNames) {
+                    app.add(new ClientInformation(name));
+                }
+                usersInMyLobby = app;
             }
         }
     }
