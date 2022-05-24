@@ -9,9 +9,8 @@ import java.util.List;
 public class ClientInformation {
     private int id;
     private String UserName;
-    List<String> carteInMano, carteViste;
-    HashMap<String, Boolean> note;
-    int posX, posY;
+    private boolean host;
+    Point pos;
     int numeroMosse;
     //ServerMain server;
 
@@ -33,3 +32,5 @@ public class ClientInformation {
     public int getId(){return id;}
     public String getUsername(){return UserName;}
 }
+
+
