@@ -566,11 +566,140 @@ public class GUI {
                 }});
 
                 panel(new PanelBuilder("panel_body"){{
-                    childLayoutHorizontal();
+                    childLayoutVertical();
                     backgroundColor("#0000");
                     backgroundImage("Interface/Stanza.png");
                     height("60%");
                     width("70%");
+
+                    panel(new PanelBuilder("body_top_1_line"){{
+                        childLayoutVertical();
+                        backgroundColor("#0000");
+                        height("23%");
+                        width("70%");
+                    }});
+
+                    //prima riga pannello utenti
+                    panel(new PanelBuilder("body_1_line"){{
+                            childLayoutHorizontal();
+                            backgroundColor("#0000");
+                            height("13%");
+                            width("100%");
+
+                        panel(new PanelBuilder("margin_left"){{
+                            width("5%");
+                        }});
+
+                        text(new TextBuilder("user1"){{
+                            font("aurulent-sans-16.fnt");
+                            width("36%");
+                            height("40%");
+                            color("#000f");
+                            text("Hello World!");
+                            onActiveEffect(new EffectBuilder("textSize"){{
+                                effectParameter("endSize", "4");
+                            }});
+
+                        }});
+
+                        panel(new PanelBuilder("center"){{
+                            width("18%");
+                        }});
+
+                        text(new TextBuilder("user2"){{
+                            font("aurulent-sans-16.fnt");
+                            width("36%");
+                            height("40%");
+                            color("#000f");
+                            text("Hello World!");
+                        }});
+
+
+                    }});
+
+                    panel(new PanelBuilder("body_top_2_line"){{
+                        childLayoutVertical();
+                        backgroundColor("#0000");
+                        height("13%");
+                        width("70%");
+                    }});
+
+                    //prima riga pannello utenti
+                    panel(new PanelBuilder("body_2_line"){{
+                        childLayoutHorizontal();
+                        backgroundColor("#0000");
+                        height("13%");
+                        width("100%");
+
+                        panel(new PanelBuilder("margin_left"){{
+                            width("5%");
+                        }});
+
+                        text(new TextBuilder("user3"){{
+                            font("aurulent-sans-16.fnt");
+                            width("36%");
+                            height("40%");
+                            color("#000f");
+                            text("Hello World!");
+
+                        }});
+
+                        panel(new PanelBuilder("center"){{
+                            width("18%");
+                        }});
+
+                        text(new TextBuilder("user4"){{
+                            font("aurulent-sans-16.fnt");
+                            width("36%");
+                            height("40%");
+                            color("#000f");
+                            text("Hello World!");
+                        }});
+
+
+                    }});
+
+                    panel(new PanelBuilder("body_top_3_line"){{
+                        childLayoutVertical();
+                        backgroundColor("#0000");
+                        height("14%");
+                        width("70%");
+                    }});
+
+                    //prima riga pannello utenti
+                    panel(new PanelBuilder("body_3_line"){{
+                        childLayoutHorizontal();
+                        backgroundColor("#0000");
+                        height("13%");
+                        width("100%");
+
+                        panel(new PanelBuilder("margin_left"){{
+                            width("5%");
+                        }});
+
+                        text(new TextBuilder("user5"){{
+                            font("aurulent-sans-16.fnt");
+                            width("36%");
+                            height("40%");
+                            color("#000f");
+                            text("Hello World!");
+
+                        }});
+
+                        panel(new PanelBuilder("center"){{
+                            width("18%");
+                        }});
+
+                        text(new TextBuilder("user6"){{
+                            font("aurulent-sans-16.fnt");
+                            width("36%");
+                            height("40%");
+                            color("#000f");
+                            text("Hello World!");
+                        }});
+
+
+                    }});
                 }});
 
 
