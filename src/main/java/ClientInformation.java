@@ -12,6 +12,8 @@ public class ClientInformation {
     private boolean host;
     Point pos;
     int numeroMosse;
+
+
     //ServerMain server;
 
     public ClientInformation(){}

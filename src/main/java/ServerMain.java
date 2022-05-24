@@ -13,7 +13,7 @@ import java.util.*;
 
 public class ServerMain extends SimpleApplication {
     Server gameServer;
-    List<lobbyClass> activeLobbies = new LinkedList<lobbyClass>(){};
+    List<lobbyClass> activeLobbies = new LinkedList<lobbyClass>() {};
     DataDB database;
 
     String mappaOriginale[][] = {
@@ -73,6 +73,8 @@ public class ServerMain extends SimpleApplication {
         gameServer.addMessageListener(new ServerListener(), UtNetworking.DBMess.class);
 
     }
+
+
 
     @Serializable
     private class UserManager{
@@ -432,6 +434,7 @@ public class ServerMain extends SimpleApplication {
             }
         }
     }
+
 }
 
 
