@@ -28,7 +28,8 @@ public class ClientInformation {
 
     public void setId(int id){this.id = id;}
     public void setUserName(String usr){UserName = usr;}
-
+    public void setHost(boolean setting) {host = setting;}
+    public boolean getHost() {return host;}
     public int getId(){return id;}
     public String getUsername(){return UserName;}
 }

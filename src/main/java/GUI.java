@@ -591,13 +591,13 @@ public class GUI {
                         }});
 
                         text(new TextBuilder("user1"){{
-                            font("aurulent-sans-16.fnt");
+                            font("Interface/Fonts/build.ttf");
                             width("36%");
                             height("40%");
                             color("#000f");
-                            text("Hello World!");
+                            text("");
                             onActiveEffect(new EffectBuilder("textSize"){{
-                                effectParameter("endSize", "4");
+                                effectParameter("endSize", "2");
                             }});
 
                         }});
@@ -607,11 +607,14 @@ public class GUI {
                         }});
 
                         text(new TextBuilder("user2"){{
-                            font("aurulent-sans-16.fnt");
+                            font("Interface/Fonts/build.ttf");
                             width("36%");
                             height("40%");
                             color("#000f");
-                            text("Hello World!");
+                            text("");
+                            onActiveEffect(new EffectBuilder("textSize"){{
+                                effectParameter("endSize", "2");
+                            }});
                         }});
 
 
@@ -636,11 +639,14 @@ public class GUI {
                         }});
 
                         text(new TextBuilder("user3"){{
-                            font("aurulent-sans-16.fnt");
+                            font("Interface/Fonts/build.ttf");
                             width("36%");
                             height("40%");
                             color("#000f");
-                            text("Hello World!");
+                            text("");
+                            onActiveEffect(new EffectBuilder("textSize"){{
+                                effectParameter("endSize", "2");
+                            }});
 
                         }});
 
@@ -649,11 +655,14 @@ public class GUI {
                         }});
 
                         text(new TextBuilder("user4"){{
-                            font("aurulent-sans-16.fnt");
+                            font("Interface/Fonts/build.ttf");
                             width("36%");
                             height("40%");
                             color("#000f");
-                            text("Hello World!");
+                            text("");
+                            onActiveEffect(new EffectBuilder("textSize"){{
+                                effectParameter("endSize", "2");
+                            }});
                         }});
 
 
@@ -678,11 +687,14 @@ public class GUI {
                         }});
 
                         text(new TextBuilder("user5"){{
-                            font("aurulent-sans-16.fnt");
+                            font("Interface/Fonts/build.ttf");
                             width("36%");
                             height("40%");
                             color("#000f");
-                            text("Hello World!");
+                            text("");
+                            onActiveEffect(new EffectBuilder("textSize"){{
+                                effectParameter("endSize", "2");
+                            }});
 
                         }});
 
@@ -691,16 +703,70 @@ public class GUI {
                         }});
 
                         text(new TextBuilder("user6"){{
-                            font("aurulent-sans-16.fnt");
+                            font("Interface/Fonts/build.ttf");
                             width("36%");
                             height("40%");
                             color("#000f");
-                            text("Hello World!");
+                            text("");
+                            onActiveEffect(new EffectBuilder("textSize"){{
+                                effectParameter("endSize", "2");
+                            }});
                         }});
 
 
                     }});
+
+
                 }});
+
+                panel(new PanelBuilder("buttonSection"){{
+                    height("100%");
+                    width("60%");
+                    childLayoutVertical();
+
+                    panel(new PanelBuilder("spaceBorder"){{
+                        height("78%");
+                    }});
+
+                    panel(new PanelBuilder("buttonBox"){{
+                        valignCenter();
+                        childLayoutHorizontal();
+                        height("20%");
+                        width("50%");
+
+                        panel(new PanelBuilder("marginLeftPanel"){{
+                            width("65%");
+                        }});
+                        //BOTTONE STARTGAME
+                        control(new ButtonBuilder("StartGameButton", "Start Game") {{
+                            valignCenter();
+                            name("button");
+                            alignLeft();
+                            width("30%");
+                            height("50%");
+                            visible(false);
+
+                        }});
+
+                        panel(new PanelBuilder("spaceBetweenButtons"){{
+                            width("10%");
+                        }});
+
+                        //BOTTONE EXIT LOBBY
+                        control(new ButtonBuilder("ExitLobbyButton", "Exit Lobby") {{
+                            valignCenter();
+                            name("button");
+                            width("30%");
+                            height("50%");
+
+                        }});
+                    }});
+
+
+                }});
+
+
+
 
 
 

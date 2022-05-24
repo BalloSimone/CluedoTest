@@ -18,6 +18,7 @@ public class UtNetworking {
         Serializer.registerClass(ClientInformation.class);
         Serializer.registerClass(PlayingMessage.class);
         Serializer.registerClass(LobbyInformation.class);
+        Serializer.registerClass(YouAreTheHost.class);
     }
 
 
@@ -150,6 +151,7 @@ public class UtNetworking {
     public static class LobbyInformation extends AbstractMessage{
         private List<String> userNames;
         private String lobbyId;
+
         public LobbyInformation(){};
 
         public LobbyInformation(String lobbyId, List<String> userNames) {
@@ -160,6 +162,12 @@ public class UtNetworking {
 
         public List<String> getNames() { return userNames;}
         public String getLobbyId() {return lobbyId;}
+
+    }
+
+    @Serializable
+    public static class YouAreTheHost extends AbstractMessage{
+        public YouAreTheHost(){};
 
     }
 

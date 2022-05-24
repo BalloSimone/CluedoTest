@@ -26,6 +26,9 @@ public class ServerMain extends SimpleApplication {
     }
     @Override
     public void simpleInitApp() {
+
+
+
         try {
             DataDB database = new DataDB("root", "password", "usersclue");
         } catch (Exception e) {
@@ -177,6 +180,7 @@ public class ServerMain extends SimpleApplication {
 
                     //invio in risposta al client le informazioni sulla lobby in cui è entrato
                     gameServer.getConnection(source.getId()).send(new UtNetworking.LobbyInformation(idLobby, listNames));
+                    gameServer.getConnection(source.getId()).send(new UtNetworking.YouAreTheHost());
                 }else if(request.equals("1")) {
                     String idLobby;
                     //Entra nella prima lobby con un posto libero, se non ci sono lobby con un posto libero allora entra in una lobby come host
@@ -206,7 +210,7 @@ public class ServerMain extends SimpleApplication {
                     }
                     //invio in risposta al client le informazioni sulla lobby in cui è entrato
                     gameServer.getConnection(source.getId()).send(new UtNetworking.LobbyInformation(idLobby, getAllUserNames(idLobby)));
-
+                    gameServer.getConnection(source.getId()).send(new UtNetworking.YouAreTheHost());
                 }
             }else if(m instanceof UtNetworking.LobbyDebugMess){
                 UtNetworking.LobbyDebugMess mess = (UtNetworking.LobbyDebugMess) m;
