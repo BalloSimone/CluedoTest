@@ -81,7 +81,7 @@ public class ServerMain extends SimpleApplication {
 
 
     @Serializable
-    private class UserManager{
+    public class UserManager{
         ClientInformation cInfo;
         HostedConnection cNetwork;
 
