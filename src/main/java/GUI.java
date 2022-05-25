@@ -745,6 +745,7 @@ public class GUI {
                             width("30%");
                             height("50%");
                             visible(false);
+                            interactOnClick("startGame()");
 
                         }});
 

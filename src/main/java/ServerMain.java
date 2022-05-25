@@ -27,6 +27,9 @@ public class ServerMain extends SimpleApplication {
             {"w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w"}
     };
 
+    private String carte[] = {"Green", "Mustard", "Orchid", "Peacock", "Plum", "Scarlett", "persone",
+            "Candeliere", "Pugnale", "Tubo di piombo", "Pistola", "Corda", "Chiave inglese", "armi",
+            "Sala da ballo", "Sala del biliardo", "Serra", "Sala da pranzo", "Ingresso", "Cucina", "Biblioteca", "Salotto", "Studio", "luoghi"};
 
 
 
@@ -41,7 +44,7 @@ public class ServerMain extends SimpleApplication {
 
 
         try {
-            DataDB database = new DataDB("root", "password", "usersclue");
+            DataDB database = new DataDB("root", "", "usersclue");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -92,7 +95,7 @@ public class ServerMain extends SimpleApplication {
     private class lobbyClass{
         private String idLobby;
         private HostedConnection GameHost;
-        private final List<UserManager> userInLobbyInfo = new ArrayList<UserManager>();
+        private List<UserManager> userInLobbyInfo = new ArrayList<UserManager>();
         private boolean CanSomeoneEntry;
         private boolean isInGame;
 
@@ -102,7 +105,8 @@ public class ServerMain extends SimpleApplication {
 
         String mappaTemporanea[][];
 
-        List<String> mazzo;
+       List<String> mazzo = new LinkedList<>(Arrays.asList(getCarte()));
+
 
         //variabili necessarie in fase di game
         int turno;
@@ -285,7 +289,7 @@ public class ServerMain extends SimpleApplication {
 
     private lobbyClass getLobbyById(String lobbyId){
         for (lobbyClass lobby: activeLobbies) {
-            if(lobby.getIdLobby() == lobbyId)
+            if(lobby.getIdLobby().equals(lobbyId))
                 return lobby;
         }
         return null;
