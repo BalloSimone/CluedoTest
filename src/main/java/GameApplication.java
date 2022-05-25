@@ -36,7 +36,6 @@ public class GameApplication extends SimpleApplication {
     ClientInformation cInfo;
     GUI gui;
     List<ClientInformation> usersInMyLobby;
-    String MyLobbyId;
 
 
     public static void main(String[] args) {
@@ -144,6 +143,7 @@ public class GameApplication extends SimpleApplication {
         client.addMessageListener(new ClientLIstener(), UtNetworking.CheckLogin.class);
         client.addMessageListener(new ClientLIstener(), UtNetworking.LobbyInformation.class);
         client.addMessageListener(new ClientLIstener(), UtNetworking.YouAreTheHost.class);
+        client.addMessageListener(new ClientLIstener(), UtNetworking.InitForStartingGame.class);
     }
 
     public void inputListenerInit() {
@@ -186,6 +186,7 @@ public class GameApplication extends SimpleApplication {
                 break;
             }
             case "lobbyscreen": {
+                if(usersInMyLobby == null) return;
                 for(int i=1; i<=usersInMyLobby.size(); i++){
                     nifty_changeText("user"+i, usersInMyLobby.get(i-1).getUsername());
                 }
@@ -304,6 +305,7 @@ public class GameApplication extends SimpleApplication {
 
 
             } else if (m instanceof UtNetworking.LobbyInformation) {
+
                 //variabile di appoggio
                 List<ClientInformation> app = new ArrayList<ClientInformation>();
 
@@ -313,7 +315,8 @@ public class GameApplication extends SimpleApplication {
                 List<String> usrNames = mess.getNames();
 
                 //mi salvo l'id della mia lobby
-                MyLobbyId = id;
+                cInfo.setMyLobbyId(id);
+                gui.cInfo.setMyLobbyId(id);
 
                 System.out.println("ID LOBBY: " + id + "   UTENTI: " + usrNames);
 
@@ -322,8 +325,19 @@ public class GameApplication extends SimpleApplication {
                     app.add(new ClientInformation(name));
                 }
                 usersInMyLobby = app;
+
             }else if (m instanceof UtNetworking.YouAreTheHost) {
+
                 cInfo.setHost(true);
+
+            }else if (m instanceof UtNetworking.InitForStartingGame) {
+
+                UtNetworking.InitForStartingGame mess = (UtNetworking.InitForStartingGame) m;
+                //i client prendono le informazioni che gli servono per iniziare a giocare dal server
+
+                //i client passano alla schermata di gioco
+                nifty.gotoScreen("Game");
+
             }
 
         }

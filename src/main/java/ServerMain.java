@@ -16,7 +16,7 @@ public class ServerMain extends SimpleApplication {
     List<lobbyClass> activeLobbies = new LinkedList<lobbyClass>() {};
     DataDB database;
 
-    String mappaOriginale[][] = {
+    public final String mappaOriginale[][] = {
             {"w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w"},
             {"w", "w", "w", "r", "w", "w", "w", "r", "w", "w", "w", "w", "w"},
             {"w", "w", "e", "e", "e", "e", "e", "e", "e", "e", "e", "w", "w"},
@@ -74,6 +74,7 @@ public class ServerMain extends SimpleApplication {
         gameServer.addMessageListener(new ServerListener(), UtNetworking.EnterLobbyMessage.class);
         gameServer.addMessageListener(new ServerListener(), UtNetworking.LobbyDebugMess.class);
         gameServer.addMessageListener(new ServerListener(), UtNetworking.DBMess.class);
+        gameServer.addMessageListener(new ServerListener(), UtNetworking.StartNewGame.class);
 
     }
 
@@ -90,6 +91,10 @@ public class ServerMain extends SimpleApplication {
         }
     }
 
+    public String[] getCarte(){
+        return carte;
+
+    }
 
 
     private class lobbyClass{
@@ -99,11 +104,7 @@ public class ServerMain extends SimpleApplication {
         private boolean CanSomeoneEntry;
         private boolean isInGame;
 
-        String carte[] = {"Green", "Mustard", "Orchid", "Peacock", "Plum", "Scarlett", "persone",
-                "Candeliere", "Pugnale", "Tubo di piombo", "Pistola", "Corda", "Chiave inglese", "armi",
-                "Sala da ballo", "Sala del biliardo", "Serra", "Sala da pranzo", "Ingresso", "Cucina", "Biblioteca", "Salotto", "Studio", "luoghi"};
-
-        String mappaTemporanea[][];
+       String mappaTemporanea[][];
 
        List<String> mazzo = new LinkedList<>(Arrays.asList(getCarte()));
 
@@ -304,6 +305,10 @@ public class ServerMain extends SimpleApplication {
         return userNames;
     }
 
+    private List<UserManager> getAllUsers(lobbyClass lobbyClass){
+        return lobbyClass.userInLobbyInfo;
+    }
+
     private String generateNewIdLobby(){
         String characters = "abcdefghijklmno1234567890";
         String result = "";
@@ -334,6 +339,28 @@ public class ServerMain extends SimpleApplication {
                 return -1;
         }
         else return -1;
+    }
+
+    private void startGame(String idLobby){
+
+        lobbyClass lobby = getLobbyById(idLobby); //ottengo la lobby in cui sta partendo la partita
+
+        //invio le informazioni ai giocatori per iniziare a giocare
+        for (UserManager user: lobby.userInLobbyInfo) {
+            //ottieniNote(mazzo);//fornitura ai player delle carte da mettere nel server
+            int nCartePerGiocatore = (lobby.mazzo.size())/lobby.userInLobbyInfo.size();
+            List<String> carteInMano = new LinkedList<>();
+            for(int j = 0; j<nCartePerGiocatore; j++) //distribuzione carte hai giocatori
+            {
+                int temp = (int)(Math.random()*lobby.mazzo.size());
+                carteInMano.add(lobby.mazzo.get(temp));
+                lobby.mazzo.remove(temp);
+            }
+            //g.ottieniMano(carteInMano);
+            gameServer.getConnection(user.cNetwork.getId()).send(new UtNetworking.InitForStartingGame());
+        }
+
+
     }
 
 
@@ -434,6 +461,11 @@ public class ServerMain extends SimpleApplication {
 
                 }
 
+
+            }else if(m instanceof UtNetworking.StartNewGame) {
+                UtNetworking.StartNewGame mess = (UtNetworking.StartNewGame) m;
+                String idLobby = mess.getIdLobby();
+                startGame(idLobby); //starto il game di quella lobby
 
             }
         }

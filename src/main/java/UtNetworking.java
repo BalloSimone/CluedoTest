@@ -19,6 +19,8 @@ public class UtNetworking {
         Serializer.registerClass(PlayingMessage.class);
         Serializer.registerClass(LobbyInformation.class);
         Serializer.registerClass(YouAreTheHost.class);
+        Serializer.registerClass(StartNewGame.class);
+        Serializer.registerClass(InitForStartingGame.class);
     }
 
 
@@ -170,6 +172,30 @@ public class UtNetworking {
         public YouAreTheHost(){};
 
     }
+
+
+    @Serializable
+    public static class StartNewGame extends AbstractMessage{
+        private String idLobby;
+
+        public StartNewGame(){};
+
+        public StartNewGame(String idLobby){
+            this.idLobby = idLobby;
+        }
+
+        public String getIdLobby(){
+            return idLobby;
+        }
+
+    }
+
+    @Serializable
+    public static class InitForStartingGame extends AbstractMessage{  //messaggio di inizio gioco
+        public InitForStartingGame(){};
+        //QUI CI VANNO LE INFORMAZIONI DELLA LOGICA DI FILO
+    }
+
 
 
 

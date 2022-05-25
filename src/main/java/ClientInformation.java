@@ -11,6 +11,7 @@ public class ClientInformation {
     private String UserName;
     private boolean host;
     Point pos;
+    private String myLobbyId;
     int numeroMosse;
 
 
@@ -32,6 +33,8 @@ public class ClientInformation {
     public void setHost(boolean setting) {host = setting;}
     public boolean getHost() {return host;}
     public int getId(){return id;}
+    public String getMyLobbyId(){return myLobbyId;}
+    public void setMyLobbyId(String newId){myLobbyId = newId;}
     public String getUsername(){return UserName;}
 }
 

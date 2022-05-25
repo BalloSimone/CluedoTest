@@ -28,6 +28,7 @@ public class GUI {
         home();
         startGameScreen();
         lobbyScreen();
+        gameScreen();
         registrationFailedPopUp();
     }
 
@@ -363,7 +364,7 @@ public class GUI {
                             valignCenter();
                             width("70%");
                             height("100%");
-                            interactOnClick("startGame()");
+                            interactOnClick("startScreen()");
 
                         }});
 
@@ -775,6 +776,15 @@ public class GUI {
 
         }}.build(nifty));
     }
+
+
+    public void gameScreen() {
+        //schermo di lobby
+        nifty.addScreen("Game", new ScreenBuilder("Game") {{
+            controller(new GameController(client, nifty, cInfo));
+        }}.build(nifty));
+    }
+
 
     private void loadControlDefinition() {
         new ControlDefinitionBuilder("button") {{

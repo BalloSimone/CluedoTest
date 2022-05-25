@@ -56,7 +56,14 @@ public class GameController extends BaseAppState implements ScreenController {
 
     }
 
+
     public void startGame(){
+        System.out.println(cInfo.getMyLobbyId());
+        clientHostConnected.send(new UtNetworking.StartNewGame(cInfo.getMyLobbyId()));
+        niftyHostConnected.gotoScreen("Game");
+    }
+
+    public void startScreen(){
         niftyHostConnected.gotoScreen("startGameScreen");
     }
 
