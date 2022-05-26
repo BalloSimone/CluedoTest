@@ -110,7 +110,7 @@ public class GameApplication extends SimpleApplication {
         gui = new GUI(nifty, client, new ClientInformation());
 
 
-        nifty.gotoScreen("loginScreen"); // start the screen
+        nifty.gotoScreen("Game"); // start the screen
     }
 
 

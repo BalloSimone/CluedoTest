@@ -782,6 +782,37 @@ public class GUI {
         //schermo di lobby
         nifty.addScreen("Game", new ScreenBuilder("Game") {{
             controller(new GameController(client, nifty, cInfo));
+
+            layer(new LayerBuilder("background") {{
+                childLayoutCenter();
+                backgroundColor("#0000");
+            }});
+
+            layer(new LayerBuilder("foreground") {{
+                childLayoutHorizontal();
+                backgroundColor("#0000");
+
+                panel(new PanelBuilder("MainPanel"){{
+                    childLayoutVertical();
+                    width("68%");
+                    height("100%");
+                    backgroundColor("#000f");
+
+                }});
+
+                panel(new PanelBuilder("NotePanel"){{
+                    width("32%");
+                    height("100%");
+                    backgroundColor("#fff0");
+                    backgroundImage("Interface/cluedo_notes.jpeg");
+
+                }});
+
+
+
+            }});
+
+
         }}.build(nifty));
     }
 
