@@ -44,9 +44,11 @@ public class GameApplication extends SimpleApplication {
 
         AppSettings settings = new AppSettings(true);
         settings.setTitle("Cluedo");
-        settings.setFullscreen(false);
+        settings.setFullscreen(true);
         settings.setWidth(1920);
         settings.setHeight(1080);
+        app.setDisplayFps(false);
+        app.setDisplayStatView(false);
         app.setSettings(settings);
         app.start(JmeContext.Type.Display); //standard type for clientApplication
 

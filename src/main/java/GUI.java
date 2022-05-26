@@ -794,14 +794,213 @@ public class GUI {
 
                 panel(new PanelBuilder("MainPanel"){{
                     childLayoutVertical();
-                    width("68%");
+                    width("65%");
                     height("100%");
-                    backgroundColor("#000f");
+
+
+                    panel(new PanelBuilder("TopIconPanel"){{
+                        childLayoutHorizontal();
+                        width("100%");
+                        height("12%");
+
+                        backgroundImage("Interface/Bar.png");
+
+                        panel(new PanelBuilder("StartIcon"){{
+                            childLayoutVertical();
+                            width("7%");
+                            height("100%");
+
+
+                        }});
+
+                        panel(new PanelBuilder("IconUser1"){{
+                            childLayoutVertical();
+                            width("8%");
+                            height("80%");
+                            backgroundImage("Interface/Characters/Green.png");
+                            alignCenter();
+                            valignCenter();
+                        }});
+
+                        panel(new PanelBuilder("SeparateIcon1"){{
+                            childLayoutVertical();
+                            width("7%");
+                            height("100%");
+
+                        }});
+
+                        panel(new PanelBuilder("IconUser2"){{
+                            childLayoutVertical();
+                            width("8%");
+                            height("80%");
+                            backgroundImage("Interface/Characters/Mustard.png");
+                            alignCenter();
+                            valignCenter();
+                        }});
+
+                        panel(new PanelBuilder("SeparateIcon2"){{
+                            childLayoutVertical();
+                            width("7%");
+                            height("100%");
+
+
+                        }});
+
+                        panel(new PanelBuilder("IconUser3"){{
+                            childLayoutVertical();
+                            width("8%");
+                            height("80%");
+                            backgroundImage("Interface/Characters/Peacock.png");
+                            alignCenter();
+                            valignCenter();
+                        }});
+
+                        panel(new PanelBuilder("SeparateIcon3"){{
+                            childLayoutVertical();
+                            width("7%");
+                            height("90%");
+
+
+                        }});
+
+                        panel(new PanelBuilder("IconUser4"){{
+                            childLayoutVertical();
+                            width("8%");
+                            height("80%");
+                            backgroundImage("Interface/Characters/Plum.png");
+                            alignCenter();
+                            valignCenter();
+                        }});
+
+                        panel(new PanelBuilder("SeparateIcon4"){{
+                            childLayoutVertical();
+                            width("7%");
+                            height("100%");
+
+
+                        }});
+
+                        panel(new PanelBuilder("IconUser5"){{
+                            childLayoutVertical();
+                            width("8%");
+                            height("80%");
+                            backgroundImage("Interface/Characters/Scarlett.png");
+                            alignCenter();
+                            valignCenter();
+                        }});
+
+                        panel(new PanelBuilder("SeparateIcon5"){{
+                            childLayoutVertical();
+                            width("7%");
+                            height("100%");
+
+
+                        }});
+
+                        panel(new PanelBuilder("IconUser6"){{
+                            childLayoutVertical();
+                            width("8%");
+                            height("80%");
+                            backgroundImage("Interface/Characters/White.png");
+                            alignCenter();
+                            valignCenter();
+                        }});
+
+                        panel(new PanelBuilder("EndIcon"){{
+                            childLayoutVertical();
+                            width("7%");
+                            height("100%");
+
+
+                        }});
+
+
+                    }});
+
+                    panel(new PanelBuilder("MiddleMainPanel"){{
+                        childLayoutVertical();
+                        width("100%");
+                        height("68%");
+                        backgroundColor("#0000");
+
+                    }});
+
+                    panel(new PanelBuilder("BottomActionPanel"){{
+                        childLayoutHorizontal();
+                        width("100%");
+                        height("20%");
+                        backgroundImage("Interface/Bar.png");
+
+                        panel(new PanelBuilder("BottomActionMarginLeft"){{
+                                childLayoutHorizontal();
+                                width("5%");
+                                height("100%");
+                        }});
+
+                        //BOTTONE TIRA DADI
+                        control(new ButtonBuilder("LanciaDadi", "Lancia dadi") {{
+                            valignCenter();
+                            name("button");
+                            width("20%");
+                            height("50%");
+
+                        }});
+
+
+                        panel(new PanelBuilder("CardsPanel"){{
+                            childLayoutHorizontal();
+                            width("50%");
+                            height("100%");
+                        }});
+
+
+                        panel(new PanelBuilder("Actions"){{
+                            childLayoutVertical();
+                            width("20%");
+                            height("100%");
+
+                            panel(new PanelBuilder("MarginTopSeparator"){{
+                                childLayoutHorizontal();
+                                width("50%");
+                                height("10%");
+                            }});
+
+                            //BOTTONE ESEGUI IPOTESI
+                            control(new ButtonBuilder("Ipotesi", "Ipotesi") {{
+                                valignCenter();
+                                name("button");
+                                width("100%");
+                                height("30%");
+
+                            }});
+
+                            panel(new PanelBuilder("SeparatorButton"){{
+                                childLayoutHorizontal();
+                                width("50%");
+                                height("20%");
+                            }});
+
+                            //BOTTONE SOLUZIONE FINALE
+                            control(new ButtonBuilder("Soluzione", "Soluzione") {{
+                                valignCenter();
+                                name("button");
+                                width("100%");
+                                height("30%");
+
+                            }});
+
+                        }});
+
+
+
+
+                    }});
+
 
                 }});
 
                 panel(new PanelBuilder("NotePanel"){{
-                    width("32%");
+                    width("35%");
                     height("100%");
                     backgroundColor("#fff0");
                     backgroundImage("Interface/cluedo_notes.jpeg");

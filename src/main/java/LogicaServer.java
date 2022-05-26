@@ -58,7 +58,7 @@ public class LogicaServer {
     public void iniziaPartita()
     {
 
-        ottieniNote(mazzo);
+        //ottieniNote(mazzo);
         estraiCarteVincenti();
         int nCartePerGiocatore = (mazzo.size())/numeroGiocatori;
 
@@ -152,7 +152,7 @@ public class LogicaServer {
                 }
                 else
                 {
-                    g.cartaVista(vediCarta(turno, persona, arma, luogo));
+                    //g.cartaVista(vediCarta(turno, persona, arma, luogo));   --> da sistemare
                 }
             }
         }
@@ -170,15 +170,15 @@ public class LogicaServer {
 
         while(temp!=index)
         {
-            Giocatore g = giocatori.get(temp);
-
-            for(int i=0; i<g.carteInMano.size(); i++)
+            ServerMain.UserManager g = giocatori.get(temp);
+    //DA RIGUARDARE
+   /*         for(int i=0; i<g.carteInMano.size(); i++)
             {
                 if(g.carteInMano.get(i) == persona || g.carteInMano.get(i) == arma || g.carteInMano.get(i) == luogo)
                     return g.carteInMano.get(i);
             }
 
-
+*/
             if(index == numeroGiocatori-1)
                 temp=0;
             else
