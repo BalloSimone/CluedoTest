@@ -16,7 +16,7 @@ public class ServerMain extends SimpleApplication {
     List<lobbyClass> activeLobbies = new LinkedList<lobbyClass>() {};
     DataDB database;
 
-    public final String mappaOriginale[][] = {
+    public static final String[][] mappaOriginale = {
             {"w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w"},
             {"w", "w", "w", "r", "w", "w", "w", "r", "w", "w", "w", "w", "w"},
             {"w", "w", "e", "e", "e", "e", "e", "e", "e", "e", "e", "w", "w"},
@@ -27,7 +27,7 @@ public class ServerMain extends SimpleApplication {
             {"w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w"}
     };
 
-    private String carte[] = {"Green", "Mustard", "Orchid", "Peacock", "Plum", "Scarlett", "persone",
+    private static String[] carte = {"Green", "Mustard", "Orchid", "Peacock", "Plum", "Scarlett", "persone",
             "Candeliere", "Pugnale", "Tubo di piombo", "Pistola", "Corda", "Chiave inglese", "armi",
             "Sala da ballo", "Sala del biliardo", "Serra", "Sala da pranzo", "Ingresso", "Cucina", "Biblioteca", "Salotto", "Studio", "luoghi"};
 
@@ -81,7 +81,7 @@ public class ServerMain extends SimpleApplication {
 
 
     @Serializable
-    public class UserManager{
+    public static class UserManager{
         ClientInformation cInfo;
         HostedConnection cNetwork;
 
@@ -91,31 +91,31 @@ public class ServerMain extends SimpleApplication {
         }
     }
 
-    public String[] getCarte(){
+    public static String[] getCarte(){
         return carte;
 
     }
 
 
-    private class lobbyClass{
+    public static class lobbyClass{
         private String idLobby;
         private HostedConnection GameHost;
         private List<UserManager> userInLobbyInfo = new ArrayList<UserManager>();
         private boolean CanSomeoneEntry;
         private boolean isInGame;
 
-       String mappaTemporanea[][];
+       static String mappaTemporanea[][];
 
        List<String> mazzo = new LinkedList<>(Arrays.asList(getCarte()));
 
 
         //variabili necessarie in fase di game
-        int turno;
+        static int turno;
         //static String nomeFaseTurno[] = {"lancia dadi", "movimento", "predizione"};
         String faseTurno = "lancia dadi";
         String personaTurno = "";
         int numeroMosse = 0;
-        String persona, arma, luogo;
+        static String persona, arma, luogo;
 
         public lobbyClass(){}
 

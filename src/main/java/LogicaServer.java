@@ -1,3 +1,5 @@
+import com.jme3.network.HostedConnection;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -29,7 +31,7 @@ public class LogicaServer {
         turno = 0;
         numeroGiocatori = 0;
     }
-/*
+
 
     public void estraiCarteVincenti()
     {
@@ -62,7 +64,7 @@ public class LogicaServer {
         estraiCarteVincenti();
         int nCartePerGiocatore = (mazzo.size())/numeroGiocatori;
 
-        for(Giocatore g : giocatori)
+        for(ServerMain.UserManager g : giocatori)
         {
             List<String> carteInMano = new LinkedList<>();
             for(int j = 0; j<nCartePerGiocatore; j++) //distribuzione carte hai giocatori
@@ -71,59 +73,60 @@ public class LogicaServer {
                 carteInMano.add(mazzo.get(temp));
                 mazzo.remove(temp);
             }
-            g.ottieniMano(carteInMano);
+            //g.ottieniMano(carteInMano);   -->da fixare
 
-            mappaTemporanea[2][2+g.id] = "g"+g.id; // metodo temporaneo per assegnazione della posizione di un giocatore(da cambiare)
-            g.pos.x = 2;
-            g.pos.y = 2+g.id;
+            ServerMain.lobbyClass.mappaTemporanea[2][2+g.cInfo.getId()] = "g"+g.cInfo.getId(); // metodo temporaneo per assegnazione della posizione di un giocatore(da cambiare)
+            g.cInfo.pos.x = 2;
+            g.cInfo.pos.y = 2+g.cInfo.getId();
         }
 
         // per decidere chi comincia
         turno = (int)(Math.random()*numeroGiocatori);
-        personaTurno = giocatori.get(turno).nomeGiocatore;
+        personaTurno = giocatori.get(turno).cInfo.getUsername();
 
-        for(Giocatore g : giocatori){//do a tutti i giocatori le carte extra la mappa e decido chi comincia
-            for(int i=0; i<mazzo.size(); i++)
-                g.cartaVista(mazzo.get(i));
-            g.mappa = mappaTemporanea;
-            g.turno = personaTurno;
+        for(ServerMain.UserManager g : giocatori){//do a tutti i giocatori le carte extra la mappa e decido chi comincia
+            //for(int i=0; i<mazzo.size(); i++)
+                //g.cartaVista(mazzo.get(i));    -->da fixare
+            //g.mappa = mappaTemporanea;
+            //g.turno = personaTurno;
         }
 
     }
+
     //////////////////////////////////////////////////////////////////////////
     //funzioni che servono durante la partita
     public static void effettuaMovimento(int x, int y) //spostamento del player a cui bisogna implementare il numero di mosse disponibili
     {
-        for(Giocatore g : giocatori)
+        for(ServerMain.UserManager g : giocatori)
         {
             //if(g.idGiocatore == turno && faseTurno == "movimento")
-            if(g.nomeGiocatore==giocatori.get(turno).nomeGiocatore && faseTurno == "movimento")
+            if(g.cInfo.getUsername()==giocatori.get(turno).cInfo.getUsername() && faseTurno == "movimento")
             {
-                if(mappaTemporanea[x][y].contains("g"))
-                    mappaTemporanea[x][y] += "g"+ turno;
+                if(ServerMain.lobbyClass.mappaTemporanea[x][y].contains("g"))
+                    ServerMain.lobbyClass.mappaTemporanea[x][y] += "g"+ turno;
                 else
-                    mappaTemporanea[x][y] = "g"+ turno;
+                    ServerMain.lobbyClass.mappaTemporanea[x][y] = "g"+ turno;
 
-                mappaTemporanea[g.pos.x][g.pos.y] = mappaTemporanea[g.pos.x][g.pos.y].replace("g"+turno, "");
+                ServerMain.lobbyClass.mappaTemporanea[g.cInfo.pos.x][g.cInfo.pos.y] = ServerMain.lobbyClass.mappaTemporanea[g.cInfo.pos.x][g.cInfo.pos.y].replace("g"+turno, "");
                 //System.out.println(mappaTemporanea[g.pos.x][g.pos.y]);
-                if(mappaTemporanea[g.pos.x][g.pos.y]=="")
-                    mappaTemporanea[g.pos.x][g.pos.y]=mappaOriginale[g.pos.x][g.pos.y];
+                if(ServerMain.lobbyClass.mappaTemporanea[g.cInfo.pos.x][g.cInfo.pos.y]=="")
+                    ServerMain.lobbyClass.mappaTemporanea[g.cInfo.pos.x][g.cInfo.pos.y]=ServerMain.mappaOriginale[g.cInfo.pos.x][g.cInfo.pos.y];
 
-                g.pos.x = x;
-                g.pos.y = y;
+                g.cInfo.pos.x = x;
+                g.cInfo.pos.y = y;
 
 
-                if(mappaTemporanea[x][y]=="r")
+                if(ServerMain.lobbyClass.mappaTemporanea[x][y]=="r")
                 {
                     numeroMosse=0;
-                    g.numeroMosse=0;
+                    g.cInfo.numeroMosse=0;
                     faseTurno = "predizione";
-                    g.faseTurno = "predizione";
+                    //g.faseTurno = "predizione";   -->  da sistemare
                 }
                 else
                 {
                     numeroMosse--;
-                    g.numeroMosse--;
+                    g.cInfo.numeroMosse--;
                     if(numeroMosse==0)
                         cambiaTurno();
                 }
@@ -134,13 +137,13 @@ public class LogicaServer {
     public static void effettuaPredizione(String persona, String arma, String luogo)
     {
 
-        for(Giocatore g : giocatori)
-        {
-            if(g.nomeGiocatore==giocatori.get(turno).nomeGiocatore && faseTurno == "predizione")
+        for(ServerMain.UserManager g : giocatori)
+        {   //g.cInfo.getUSername() --> g.nomeGiocatore
+            if(g.cInfo.getUsername()==giocatori.get(turno).cInfo.getUsername() && faseTurno == "predizione")
             {
-                if(mappaOriginale[g.pos.x][g.pos.y].equals("v"))
+                if(ServerMain.mappaOriginale[g.cInfo.pos.x][g.cInfo.pos.y].equals("v"))
                 {
-                    if(Server.persona==persona && Server.arma==arma && Server.luogo==luogo)
+                    if(ServerMain.lobbyClass.persona==persona && ServerMain.lobbyClass.arma==arma && ServerMain.lobbyClass.luogo==luogo)
                     {
                         finePartita = true;
                     }
@@ -198,10 +201,10 @@ public class LogicaServer {
 
         faseTurno = "lancia dadi";
 
-        for(Giocatore g : giocatori)
+        for(ServerMain.UserManager g : giocatori)
         {
-            g.turno = giocatori.get(turno).nomeGiocatore;
-            g.faseTurno = "lancia dadi";
+            //g.turno = giocatori.get(turno).nomeGiocatore;   -->da fixare
+            //g.faseTurno = "lancia dadi";   --> da fixare
         }
     }
 
@@ -209,9 +212,9 @@ public class LogicaServer {
     {
         for(String s : carte)
         {
-            note.put(s, false);
+            //note.put(s, false);   --> note non esiste
         }
     }
 
- */
+
 }
