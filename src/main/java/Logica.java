@@ -1,9 +1,7 @@
 import java.awt.*;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.awt.Point;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Logica {
@@ -22,12 +20,13 @@ public class Logica {
     public Logica()
     {
         isMyTurn = false;
-
         //inizializzazione variabili del giocatore
         note = new HashMap<String, Boolean>();
         carteInMano = new LinkedList<>();
-        carteViste = new LinkedList<>();
+        carteViste = new ArrayList<>();
     }
+
+
 
     //funzioni utili per il setup del gioco
     public void ottieniNote(List<String> carte)
@@ -61,11 +60,16 @@ public class Logica {
 
     /////////////////////////////////////////////////////////////////////////////
 
-    //funzioni utili durante il gioco
-    public void cartaVista(String carta)
-    {
-        carteViste.add(carta);
+    public void setCarteViste(List<String> carte){
+        carteViste = carte;
     }
+
+    public List<String> getCarteViste(){return carteViste;}
+
+    public void addToCarteViste(String carta){carteViste.add(carta);}
+
+    /////////////////////////////////////////////////////////////////////////////
+
 
     public void modificaNota(String carta)
     {

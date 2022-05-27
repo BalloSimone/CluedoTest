@@ -21,6 +21,7 @@ public class UtNetworking {
         Serializer.registerClass(YouAreTheHost.class);
         Serializer.registerClass(StartNewGame.class);
         Serializer.registerClass(InitForStartingGame.class);
+        Serializer.registerClass(setGameForStart.class);
     }
 
 
@@ -191,7 +192,7 @@ public class UtNetworking {
     }
 
     @Serializable
-    public static class InitForStartingGame extends AbstractMessage{  //messaggio di inizio gioco
+    public static class InitForStartingGame extends AbstractMessage{  //inizializzazione carte giocatori
         private int nCarte;
         private List<String> carteInMano;
 
@@ -211,6 +212,30 @@ public class UtNetworking {
 
         public List<String> getCarteInMano(){
             return carteInMano;
+        }
+    }
+
+    @Serializable
+    public static class setGameForStart extends AbstractMessage{  //scelta ordine turni e altre cose
+        private HostedConnection firstUser;
+        private List<String> carteVisibili;
+
+
+
+        public setGameForStart(){};
+
+        public setGameForStart(HostedConnection firstUser, List<String> carteVisibili){
+           this.carteVisibili = carteVisibili;
+           this.firstUser = firstUser;
+        };
+        //QUI CI VANNO LE INFORMAZIONI DELLA LOGICA DI FILO
+
+        public HostedConnection getFirstUser(){
+            return firstUser;
+        }
+
+        public List<String> getCarteVisibili(){
+            return carteVisibili;
         }
     }
 

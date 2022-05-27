@@ -147,6 +147,7 @@ public class GameApplication extends SimpleApplication {
         client.addMessageListener(new ClientLIstener(), UtNetworking.LobbyInformation.class);
         client.addMessageListener(new ClientLIstener(), UtNetworking.YouAreTheHost.class);
         client.addMessageListener(new ClientLIstener(), UtNetworking.InitForStartingGame.class);
+        client.addMessageListener(new ClientLIstener(), UtNetworking.setGameForStart.class);
     }
 
     public void inputListenerInit() {
@@ -365,6 +366,19 @@ public class GameApplication extends SimpleApplication {
                 //carte in mano
 
                 System.out.println(logic.getCarteInMano());
+            }else if (m instanceof UtNetworking.setGameForStart) {
+
+                UtNetworking.setGameForStart mess = (UtNetworking.setGameForStart) m;
+
+                //mi salvo le carte visibili
+                logic.setCarteViste(mess.getCarteVisibili());
+
+                //il client controlla se è il primo utente a dover giocare
+                if(mess.getFirstUser().getId() == client.getId())
+                    logic.setMyTurn(true);
+                else
+                    logic.setMyTurn(false);
+
             }
 
         }

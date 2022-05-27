@@ -16,7 +16,7 @@ public class ServerMain extends SimpleApplication {
     List<lobbyClass> activeLobbies = new LinkedList<lobbyClass>() {};
     DataDB database;
 
-    public static final String[][] mappaOriginale = {
+    public static final String[][] mappa = {
             {"w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w"},
             {"w", "w", "w", "r", "w", "w", "w", "r", "w", "w", "w", "w", "w"},
             {"w", "w", "e", "e", "e", "e", "e", "e", "e", "e", "e", "w", "w"},
@@ -93,7 +93,6 @@ public class ServerMain extends SimpleApplication {
 
     public static String[] getCarte(){
         return carte;
-
     }
 
 
@@ -103,19 +102,8 @@ public class ServerMain extends SimpleApplication {
         private List<UserManager> userInLobbyInfo = new ArrayList<UserManager>();
         private boolean CanSomeoneEntry;
         private boolean isInGame;
-
-       static String mappaTemporanea[][];
-
-       List<String> mazzo = new LinkedList<>(Arrays.asList(getCarte()));
-
-
-        //variabili necessarie in fase di game
-        static int turno;
-        //static String nomeFaseTurno[] = {"lancia dadi", "movimento", "predizione"};
-        String faseTurno = "lancia dadi";
-        String personaTurno = "";
-        int numeroMosse = 0;
-        static String persona, arma, luogo;
+        List<String> mazzo = new LinkedList<>(Arrays.asList(getCarte()));
+        LogicaServer gameLobbyLogic;
 
         public lobbyClass(){}
 
@@ -132,7 +120,16 @@ public class ServerMain extends SimpleApplication {
         public void setLobbyOpened(){ CanSomeoneEntry = true;}
         public void setLobbyClosed(){ CanSomeoneEntry = false;}
         public void startGame(){ isInGame = true;}
+        public List<HostedConnection> getAllUserConnection(){
 
+            List<HostedConnection> connections = new ArrayList<HostedConnection>();
+
+            for (UserManager user:userInLobbyInfo) {
+                connections.add(user.cNetwork);
+            }
+
+            return connections;
+        }
 
     }
 
@@ -191,8 +188,15 @@ public class ServerMain extends SimpleApplication {
 
     private void startGame(String idLobby){
 
-        lobbyClass lobby = getLobbyById(idLobby); //ottengo la lobby in cui sta partendo la partita
-        int nCartePerGiocatore = (lobby.mazzo.size())/lobby.userInLobbyInfo.size();
+        lobbyClass lobby = getLobbyById(idLobby);
+        lobby.gameLobbyLogic = new LogicaServer(mappa, carte, lobby.userInLobbyInfo);
+
+        //ESTRAGGO LE CARTE VINCENTI
+        lobby.gameLobbyLogic.estraiCarteVincenti();
+
+        //DISTRIBUISCO LE CARTE AI GIOCATORI
+        //ottengo la lobby in cui sta partendo la partita
+        int nCartePerGiocatore = (lobby.gameLobbyLogic.mazzo.size())/lobby.userInLobbyInfo.size();
         //invio le informazioni ai giocatori per iniziare a giocare
         for (UserManager user: lobby.userInLobbyInfo) {
             //ottieniNote(mazzo);//fornitura ai player delle carte da metter
@@ -200,13 +204,21 @@ public class ServerMain extends SimpleApplication {
             for(int j = 0; j<nCartePerGiocatore; j++) //distribuzione carte hai giocatori
             {
                 int temp = (int)(Math.random()*lobby.mazzo.size());
-                carteInMano.add(lobby.mazzo.get(temp));
-                lobby.mazzo.remove(temp);
+                carteInMano.add(lobby.gameLobbyLogic.mazzo.get(temp));
+                lobby.gameLobbyLogic.mazzo.remove(temp);
             }
-            //g.ottieniMano(carteInMano);
             gameServer.getConnection(user.cNetwork.getId()).send(new UtNetworking.InitForStartingGame(nCartePerGiocatore, carteInMano));
         }
 
+
+        //FACCIO VEDERE LE CARTE RIMANENTI A TUTTI I GIOCATORI
+        List<String> carteRimanenti =  lobby.gameLobbyLogic.getCarteRimanenti();
+
+        //DECIDO L'ORDINE DEI TURNI
+        lobby.gameLobbyLogic.setOrdineTurni();
+
+        Collection<HostedConnection> collection = lobby.getAllUserConnection();
+        gameServer.broadcast(Filters.in(collection), new UtNetworking.setGameForStart(lobby.gameLobbyLogic.giocatori.get(0).cNetwork, carteRimanenti));
 
     }
 
