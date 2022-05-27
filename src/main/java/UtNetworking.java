@@ -192,8 +192,26 @@ public class UtNetworking {
 
     @Serializable
     public static class InitForStartingGame extends AbstractMessage{  //messaggio di inizio gioco
+        private int nCarte;
+        private List<String> carteInMano;
+
+
+
         public InitForStartingGame(){};
+
+        public InitForStartingGame(int nCarte, List<String> carteInMano){
+            this.nCarte = nCarte;
+            this.carteInMano = carteInMano;
+        };
         //QUI CI VANNO LE INFORMAZIONI DELLA LOGICA DI FILO
+
+        public int getNCarte(){
+            return nCarte;
+        }
+
+        public List<String> getCarteInMano(){
+            return carteInMano;
+        }
     }
 
 

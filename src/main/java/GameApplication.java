@@ -36,6 +36,7 @@ public class GameApplication extends SimpleApplication {
     ClientInformation cInfo;
     GUI gui;
     List<ClientInformation> usersInMyLobby;
+    Logica logic;
 
 
     public static void main(String[] args) {
@@ -80,7 +81,7 @@ public class GameApplication extends SimpleApplication {
 
         //INZIALIZZAZIONE DELLA MAPPA
         //loadMap();
-
+        logic = new Logica();
 
         // You must add a light to make the model visible
         DirectionalLight sun = new DirectionalLight();
@@ -112,7 +113,7 @@ public class GameApplication extends SimpleApplication {
         gui = new GUI(nifty, client, new ClientInformation());
 
 
-        nifty.gotoScreen("Game"); // start the screen
+        nifty.gotoScreen("loginScreen"); // start the screen
     }
 
 
@@ -198,6 +199,17 @@ public class GameApplication extends SimpleApplication {
                     getElement("StartGameButton").setVisible(true);
 
                 }
+                break;
+            }
+            case "Game": {
+
+                //se è il turno del giocatore vengono mostrati questi bottoni
+                getElement("LanciaDadi").setVisible(logic.getMyTurn());
+                getElement("Ipotesi").setVisible(logic.getMyTurn());
+                getElement("Soluzione").setVisible(logic.getMyTurn());
+
+
+
                 break;
             }
             default:
@@ -336,10 +348,23 @@ public class GameApplication extends SimpleApplication {
 
                 UtNetworking.InitForStartingGame mess = (UtNetworking.InitForStartingGame) m;
                 //i client prendono le informazioni che gli servono per iniziare a giocare dal server
-
+                logic.setCarteInMano(mess.getCarteInMano());
                 //i client passano alla schermata di gioco
                 nifty.gotoScreen("Game");
 
+                //inizializzo a livello grafico l'interfaccia Game
+
+                //icone personaggi
+                for(int i=1; i<=6; i++){
+                    if(i <= usersInMyLobby.size())
+                        getElement("IconUser"+i).setVisible(true);
+                    else
+                        getElement("IconUser"+i).setVisible(false);
+                }
+
+                //carte in mano
+
+                System.out.println(logic.getCarteInMano());
             }
 
         }

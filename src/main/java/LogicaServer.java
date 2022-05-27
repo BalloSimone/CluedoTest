@@ -9,27 +9,24 @@ public class LogicaServer {
     //variabili necessarie per iniziare la partita
 
     static String mappa[][];
-
     static String carte[];
     static List<ServerMain.UserManager> giocatori;
     static List<String> mazzo;
-    static int numeroGiocatori;
+    static List<String> carteVincenti;
+
     ////////////////////////////////////////////////////////////////////////////////////
 
     //variabili necessarie in fase di game
-    static int turno;
     static String faseTurno = "lancia dadi";
-    static String personaTurno = "";
-    static int numeroMosse = 0;
-    static String persona, arma, luogo;
+    static int turno;
     static boolean finePartita = false;
 
     public LogicaServer(String mappa[][], String carte[], List<ServerMain.UserManager> users)
     {
-        giocatori = new LinkedList<>();
+        this.mappa = mappa;
+        giocatori = users;
         mazzo = new LinkedList<>(Arrays.asList(carte));
-        turno = 0;
-        numeroGiocatori = 0;
+
     }
 
 
@@ -47,9 +44,9 @@ public class LogicaServer {
         }
 
         //salvataggio e rimozione dal mazzo delle carte vincenti
-        persona = mazzo.remove((int)(Math.random()*indexPersona));
-        arma = mazzo.remove((int)(Math.random()*(indexArma-indexPersona-1)+indexPersona+1)-1);
-        luogo = mazzo.remove((int)(Math.random()*(indexLuogo-indexArma-1)+indexArma+1)-2);
+        carteVincenti.add(mazzo.remove((int)(Math.random()*indexPersona)));
+        carteVincenti.add(mazzo.remove((int)(Math.random()*(indexArma-indexPersona-1)+indexPersona+1)-1));
+        carteVincenti.add(mazzo.remove((int)(Math.random()*(indexLuogo-indexArma-1)+indexArma+1)-2));
 
         //rimozione delle stringhe "persone" "armi" "luoghi" dal mazzo
         mazzo.remove(indexPersona-1);
@@ -62,7 +59,7 @@ public class LogicaServer {
 
         //ottieniNote(mazzo);
         estraiCarteVincenti();
-        int nCartePerGiocatore = (mazzo.size())/numeroGiocatori;
+        int nCartePerGiocatore = (mazzo.size())/ giocatori.size();
 
         for(ServerMain.UserManager g : giocatori)
         {
@@ -81,8 +78,8 @@ public class LogicaServer {
         }
 
         // per decidere chi comincia
-        turno = (int)(Math.random()*numeroGiocatori);
-        personaTurno = giocatori.get(turno).cInfo.getUsername();
+        this.turno = (int)(Math.random()*giocatori.size());
+
 
         for(ServerMain.UserManager g : giocatori){//do a tutti i giocatori le carte extra la mappa e decido chi comincia
             //for(int i=0; i<mazzo.size(); i++)
@@ -192,21 +189,6 @@ public class LogicaServer {
     }
 
 
-    public static void cambiaTurno()
-    {
-        if(turno==numeroGiocatori)
-            turno=0;
-        else
-            turno++;
-
-        faseTurno = "lancia dadi";
-
-        for(ServerMain.UserManager g : giocatori)
-        {
-            //g.turno = giocatori.get(turno).nomeGiocatore;   -->da fixare
-            //g.faseTurno = "lancia dadi";   --> da fixare
-        }
-    }
 
     public void ottieniNote(List<String> carte)
     {

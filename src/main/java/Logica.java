@@ -9,16 +9,20 @@ import java.util.List;
 public class Logica {
 
     //informazioni relative al giocatore
-    List<String> carteInMano, carteViste;
+    private List<String> carteInMano, carteViste;
     HashMap<String, Boolean> note;
-
+    private boolean isMyTurn;
     //informazioni generiche di gioco da inserire nella classe gameApplication
     //String[][] mappa;
     //String turno, faseTurno;//
 
 
+
+
     public Logica()
     {
+        isMyTurn = false;
+
         //inizializzazione variabili del giocatore
         note = new HashMap<String, Boolean>();
         carteInMano = new LinkedList<>();
@@ -34,10 +38,27 @@ public class Logica {
         }
     }
 
-    public void ottieniMano(List<String> carteInMano)
+
+    /////////////////////////////////////////////////////////////////////////////
+
+    public void setCarteInMano(List<String> carteInMano)
     {
         this.carteInMano = carteInMano;
     }
+
+    public List<String> getCarteInMano()
+    {
+        return carteInMano;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////
+
+    public void setMyTurn(boolean turn){
+        this.isMyTurn = turn;
+    }
+
+    public boolean getMyTurn(){return isMyTurn;}
+
     /////////////////////////////////////////////////////////////////////////////
 
     //funzioni utili durante il gioco
