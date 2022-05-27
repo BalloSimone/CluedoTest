@@ -5,6 +5,11 @@ import java.util.*;
 public class LogicaServer {
     //variabili necessarie per iniziare la partita
 
+    /* Carte vincenti
+    * Lista (persona, arma, luogo)
+    *
+    * */
+
     static String mappa[][];
     static String carte[];
     List<ServerMain.UserManager> giocatori;
@@ -26,6 +31,8 @@ public class LogicaServer {
 
     }
 
+
+    //////////////////////////////////////////////////////////////////////////
 
     public void estraiCarteVincenti()
     {
@@ -52,9 +59,14 @@ public class LogicaServer {
     }
 
 
+    //////////////////////////////////////////////////////////////////////////
+
+
     public List<String> getCarteRimanenti(){
         return mazzo;
     }
+
+    //////////////////////////////////////////////////////////////////////////
 
     public void setOrdineTurni()
     {
@@ -65,71 +77,14 @@ public class LogicaServer {
     //////////////////////////////////////////////////////////////////////////
 
 
-    public void effettuaPredizione(String persona, String arma, String luogo)
+    public boolean effettuaSoluzione(List<String> carteIpotizzate)
     {
-
-        for(ServerMain.UserManager g : giocatori)
-        {   //g.cInfo.getUSername() --> g.nomeGiocatore
-            if(g.cInfo.getUsername()==giocatori.get(turno).cInfo.getUsername() && faseTurno == "predizione")
-            {
-                if(ServerMain.mappa[g.cInfo.pos.x][g.cInfo.pos.y].equals("v"))
-                {
-                    if(carteVincenti.get(0).equals(persona) && carteVincenti.get(1).equals(arma) && carteVincenti.get(2).equals(luogo))
-                    {
-                        finePartita = true;
-                    }
-                    else
-                    {
-                        giocatori.remove(g);
-                    }
-                }
-                else
-                {
-                    //g.cartaVista(vediCarta(turno, persona, arma, luogo));   --> da sistemare
-                }
-            }
-        }
-    }
-
-    private String vediCarta(int index, String persona, String arma, String luogo)
-    {
-        int temp;
-
-        if(index == giocatori.size()-1)
-            temp=0;
-        else
-            temp = index+1;
-
-
-        while(temp!=index)
-        {
-            ServerMain.UserManager g = giocatori.get(temp);
-    //DA RIGUARDARE
-   /*         for(int i=0; i<g.carteInMano.size(); i++)
-            {
-                if(g.carteInMano.get(i) == persona || g.carteInMano.get(i) == arma || g.carteInMano.get(i) == luogo)
-                    return g.carteInMano.get(i);
-            }
-
-*/
-            if(index == giocatori.size()-1)
-                temp=0;
-            else
-                temp++;
-        }
-
-        return "";
+        if(carteVincenti == carteIpotizzate)
+            return true;
+        return false;
     }
 
 
-
-    public void ottieniNote(List<String> carte)
-    {
-        for(String s : carte)
-        {
-            //note.put(s, false);   --> note non esiste
-        }
-    }
 
 
 }

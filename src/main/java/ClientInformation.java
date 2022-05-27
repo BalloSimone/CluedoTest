@@ -10,9 +10,7 @@ public class ClientInformation {
     private int id;
     private String UserName;
     private boolean host;
-    Point pos;
     private String myLobbyId;
-    int numeroMosse;
 
 
     //ServerMain server;

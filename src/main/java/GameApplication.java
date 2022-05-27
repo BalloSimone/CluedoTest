@@ -24,8 +24,10 @@ import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -81,7 +83,7 @@ public class GameApplication extends SimpleApplication {
 
         //INZIALIZZAZIONE DELLA MAPPA
         //loadMap();
-        logic = new Logica();
+        logic = new Logica(client);
 
         // You must add a light to make the model visible
         DirectionalLight sun = new DirectionalLight();
@@ -148,6 +150,8 @@ public class GameApplication extends SimpleApplication {
         client.addMessageListener(new ClientLIstener(), UtNetworking.YouAreTheHost.class);
         client.addMessageListener(new ClientLIstener(), UtNetworking.InitForStartingGame.class);
         client.addMessageListener(new ClientLIstener(), UtNetworking.setGameForStart.class);
+        client.addMessageListener(new ClientLIstener(), UtNetworking.sendMoveToOtherClient.class);
+        client.addMessageListener(new ClientLIstener(), UtNetworking.sendCardRequestToClient.class);
     }
 
     public void inputListenerInit() {
@@ -372,6 +376,17 @@ public class GameApplication extends SimpleApplication {
 
                 //mi salvo le carte visibili
                 logic.setCarteViste(mess.getCarteVisibili());
+
+                //mi salvo la mia posizione e le altre posizioni dei giocatori
+                HashMap<ClientInformation, Point> posizioni = mess.getPosizioniAltriGiocatori();
+
+                //mi salvo la mia posizione
+                logic.setMiaPosizione(posizioni.get(cInfo));
+                posizioni.remove(cInfo);
+
+
+                //salvo la posizione degli altri giocatori
+                logic.initPosizioniAltriGiocatori(posizioni);
 
                 //il client controlla se è il primo utente a dover giocare
                 if(mess.getFirstUser().getId() == client.getId())

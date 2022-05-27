@@ -4,9 +4,11 @@ import com.jme3.network.serializing.Serializable;
 import com.jme3.system.JmeContext;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.List;
 
 //gameServer.broadcast(Filters.in(activeLobbies.get(id).usersInLobby));
 
@@ -26,6 +28,9 @@ public class ServerMain extends SimpleApplication {
             {"w", "w", "w", "w", "r", "w", "w", "w", "r", "w", "w", "w", "w"},
             {"w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w"}
     };
+
+
+    public static final List<Point> startPositions = new ArrayList<Point>(Arrays.asList(new Point(2,2), new Point(2,2), new Point(2,2), new Point(2,2), new Point(2,2)));
 
     private static String[] carte = {"Green", "Mustard", "white", "Peacock", "Plum", "Scarlett", "persone",
             "Candeliere", "Pugnale", "Tubo di piombo", "Pistola", "Corda", "Chiave inglese", "armi",
@@ -75,6 +80,8 @@ public class ServerMain extends SimpleApplication {
         gameServer.addMessageListener(new ServerListener(), UtNetworking.LobbyDebugMess.class);
         gameServer.addMessageListener(new ServerListener(), UtNetworking.DBMess.class);
         gameServer.addMessageListener(new ServerListener(), UtNetworking.StartNewGame.class);
+        gameServer.addMessageListener(new ServerListener(), UtNetworking.sendMoveToServer.class);
+        gameServer.addMessageListener(new ServerListener(), UtNetworking.sendCardRequestToServer.class);
 
     }
 
@@ -217,8 +224,18 @@ public class ServerMain extends SimpleApplication {
         //DECIDO L'ORDINE DEI TURNI
         lobby.gameLobbyLogic.setOrdineTurni();
 
+        HashMap<ClientInformation, Point> posizioni = new HashMap<>();
+
+        int cont = 0;
+        //DECIDO LE POSIZIONI DI PARTENZA
+        for (UserManager user:lobby.userInLobbyInfo) {
+            posizioni.put(user.cInfo, startPositions.get(cont));
+            cont++;
+        }
+
+
         Collection<HostedConnection> collection = lobby.getAllUserConnection();
-        gameServer.broadcast(Filters.in(collection), new UtNetworking.setGameForStart(lobby.gameLobbyLogic.giocatori.get(0).cNetwork, carteRimanenti));
+        gameServer.broadcast(Filters.in(collection), new UtNetworking.setGameForStart(lobby.gameLobbyLogic.giocatori.get(0).cNetwork, carteRimanenti, posizioni));
 
     }
 
@@ -228,7 +245,7 @@ public class ServerMain extends SimpleApplication {
         public void messageReceived(HostedConnection source, Message m) {
             m.setReliable(false);     //!!senza settare reliable a true il server non riesce a vedere il messaggio che riceve dal client
             if(m instanceof UtNetworking.StartGameMessage){
-                 //!!senza settare reliable a true il server non riesce a vedere il messaggio che riceve dal client
+                //!!senza settare reliable a true il server non riesce a vedere il messaggio che riceve dal client
                 UtNetworking.StartGameMessage mess = (UtNetworking.StartGameMessage) m;
                 System.out.println(UtNetworking.StartGameMessage.getMess());
 
@@ -331,6 +348,3 @@ public class ServerMain extends SimpleApplication {
     }
 
 }
-
-
-
