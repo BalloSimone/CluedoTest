@@ -24,8 +24,10 @@ import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,6 +38,7 @@ public class GameApplication extends SimpleApplication {
     ClientInformation cInfo;
     GUI gui;
     List<ClientInformation> usersInMyLobby;
+    Logica logic;
 
 
     public static void main(String[] args) {
@@ -80,7 +83,7 @@ public class GameApplication extends SimpleApplication {
 
         //INZIALIZZAZIONE DELLA MAPPA
         //loadMap();
-
+        logic = new Logica(client);
 
         // You must add a light to make the model visible
         DirectionalLight sun = new DirectionalLight();
@@ -112,7 +115,7 @@ public class GameApplication extends SimpleApplication {
         gui = new GUI(nifty, client, new ClientInformation());
 
 
-        nifty.gotoScreen("Game"); // start the screen
+        nifty.gotoScreen("loginScreen"); // start the screen
     }
 
 
@@ -146,6 +149,9 @@ public class GameApplication extends SimpleApplication {
         client.addMessageListener(new ClientLIstener(), UtNetworking.LobbyInformation.class);
         client.addMessageListener(new ClientLIstener(), UtNetworking.YouAreTheHost.class);
         client.addMessageListener(new ClientLIstener(), UtNetworking.InitForStartingGame.class);
+        client.addMessageListener(new ClientLIstener(), UtNetworking.setGameForStart.class);
+        client.addMessageListener(new ClientLIstener(), UtNetworking.sendMoveToOtherClient.class);
+        client.addMessageListener(new ClientLIstener(), UtNetworking.sendCardRequestToClient.class);
     }
 
     public void inputListenerInit() {
@@ -198,6 +204,17 @@ public class GameApplication extends SimpleApplication {
                     getElement("StartGameButton").setVisible(true);
 
                 }
+                break;
+            }
+            case "Game": {
+
+                //se è il turno del giocatore vengono mostrati questi bottoni
+                getElement("LanciaDadi").setVisible(logic.getMyTurn());
+                getElement("Ipotesi").setVisible(logic.getMyTurn());
+                getElement("Soluzione").setVisible(logic.getMyTurn());
+
+
+
                 break;
             }
             default:
@@ -336,9 +353,46 @@ public class GameApplication extends SimpleApplication {
 
                 UtNetworking.InitForStartingGame mess = (UtNetworking.InitForStartingGame) m;
                 //i client prendono le informazioni che gli servono per iniziare a giocare dal server
-
+                logic.setCarteInMano(mess.getCarteInMano());
                 //i client passano alla schermata di gioco
                 nifty.gotoScreen("Game");
+
+                //inizializzo a livello grafico l'interfaccia Game
+
+                //icone personaggi
+                for(int i=1; i<=6; i++){
+                    if(i <= usersInMyLobby.size())
+                        getElement("IconUser"+i).setVisible(true);
+                    else
+                        getElement("IconUser"+i).setVisible(false);
+                }
+
+                //carte in mano
+
+                System.out.println(logic.getCarteInMano());
+            }else if (m instanceof UtNetworking.setGameForStart) {
+
+                UtNetworking.setGameForStart mess = (UtNetworking.setGameForStart) m;
+
+                //mi salvo le carte visibili
+                logic.setCarteViste(mess.getCarteVisibili());
+
+                //mi salvo la mia posizione e le altre posizioni dei giocatori
+                HashMap<ClientInformation, Point> posizioni = mess.getPosizioniAltriGiocatori();
+
+                //mi salvo la mia posizione
+                logic.setMiaPosizione(posizioni.get(cInfo));
+                posizioni.remove(cInfo);
+
+
+                //salvo la posizione degli altri giocatori
+                logic.initPosizioniAltriGiocatori(posizioni);
+
+                //il client controlla se è il primo utente a dover giocare
+                if(mess.getFirstUser().getId() == client.getId())
+                    logic.setMyTurn(true);
+                else
+                    logic.setMyTurn(false);
 
             }
 

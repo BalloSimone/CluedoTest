@@ -3,7 +3,9 @@ import com.jme3.network.HostedConnection;
 import com.jme3.network.serializing.Serializable;
 import com.jme3.network.serializing.Serializer;
 
+import java.awt.*;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
 import java.util.List;
 
 public class UtNetworking {
@@ -21,6 +23,13 @@ public class UtNetworking {
         Serializer.registerClass(YouAreTheHost.class);
         Serializer.registerClass(StartNewGame.class);
         Serializer.registerClass(InitForStartingGame.class);
+        Serializer.registerClass(setGameForStart.class);
+        Serializer.registerClass(sendMoveToServer.class);
+        Serializer.registerClass(sendMoveToOtherClient.class);
+        Serializer.registerClass(sendCardRequestToServer.class);
+        Serializer.registerClass(sendCardRequestToClient.class);
+
+
     }
 
 
@@ -191,9 +200,134 @@ public class UtNetworking {
     }
 
     @Serializable
-    public static class InitForStartingGame extends AbstractMessage{  //messaggio di inizio gioco
+    public static class InitForStartingGame extends AbstractMessage{  //inizializzazione carte giocatori
+        private int nCarte;
+        private List<String> carteInMano;
+
+
+
         public InitForStartingGame(){};
+
+        public InitForStartingGame(int nCarte, List<String> carteInMano){
+            this.nCarte = nCarte;
+            this.carteInMano = carteInMano;
+        };
         //QUI CI VANNO LE INFORMAZIONI DELLA LOGICA DI FILO
+
+        public int getNCarte(){
+            return nCarte;
+        }
+
+        public List<String> getCarteInMano(){
+            return carteInMano;
+        }
+    }
+
+    @Serializable
+    public static class setGameForStart extends AbstractMessage{  //scelta ordine turni e altre cose
+        private HostedConnection firstUser;
+        private List<String> carteVisibili;
+        private HashMap<ClientInformation, Point> posizioniAltriGiocatori;
+
+
+        public setGameForStart(){};
+
+        public setGameForStart(HostedConnection firstUser, List<String> carteVisibili, HashMap<ClientInformation, Point> posizioniAltriGiocatori){
+           this.carteVisibili = carteVisibili;
+           this.firstUser = firstUser;
+           this.posizioniAltriGiocatori = posizioniAltriGiocatori;
+        };
+
+        public HashMap<ClientInformation, Point> getPosizioniAltriGiocatori(){
+            return posizioniAltriGiocatori;
+        }
+
+        public HostedConnection getFirstUser(){
+            return firstUser;
+        }
+
+        public List<String> getCarteVisibili(){
+            return carteVisibili;
+        }
+    }
+
+
+    @Serializable
+    public static class sendMoveToServer extends AbstractMessage{  //scelta ordine turni e altre cose
+        private Point newPosition;
+
+
+        public sendMoveToServer(){};
+
+        public sendMoveToServer(Point newPosition){
+            this.newPosition = newPosition;
+        };
+
+
+        public Point getNewPosition(){
+            return newPosition;
+        }
+
+    }
+
+
+    @Serializable
+    public static class sendMoveToOtherClient extends AbstractMessage{
+        private Point newPosition;
+        private HostedConnection client;
+
+
+        public sendMoveToOtherClient(){};
+
+        public sendMoveToOtherClient(Point newPosition, HostedConnection client){
+            this.newPosition = newPosition;
+            this.client = client;
+        };
+
+        public Point getNewPosition() {
+            return newPosition;
+        }
+
+        public HostedConnection getClient() {
+            return client;
+        }
+    }
+
+
+    @Serializable
+    public static class sendCardRequestToServer extends AbstractMessage{
+        private List<String> carteRichieste;
+
+        public sendCardRequestToServer(){};
+
+        public sendCardRequestToServer(List<String> carteRichieste){
+            this.carteRichieste = carteRichieste;
+        };
+
+        public List<String> getCarteRichieste() {
+            return carteRichieste;
+        }
+    }
+
+    @Serializable
+    public static class sendCardRequestToClient extends AbstractMessage{
+        private List<String> carteRichieste;
+        private HostedConnection client;
+
+        public sendCardRequestToClient(){};
+
+        public sendCardRequestToClient(List<String> carteRichieste, HostedConnection client){
+            this.carteRichieste = carteRichieste;
+            this.client = client;
+        };
+
+        public List<String> getCarteRichieste() {
+            return carteRichieste;
+        }
+
+        public HostedConnection getClient() {
+            return client;
+        }
     }
 
 

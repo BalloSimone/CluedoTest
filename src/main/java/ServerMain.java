@@ -4,9 +4,11 @@ import com.jme3.network.serializing.Serializable;
 import com.jme3.system.JmeContext;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.List;
 
 //gameServer.broadcast(Filters.in(activeLobbies.get(id).usersInLobby));
 
@@ -16,7 +18,7 @@ public class ServerMain extends SimpleApplication {
     List<lobbyClass> activeLobbies = new LinkedList<lobbyClass>() {};
     DataDB database;
 
-    public static final String[][] mappaOriginale = {
+    public static final String[][] mappa = {
             {"w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w"},
             {"w", "w", "w", "r", "w", "w", "w", "r", "w", "w", "w", "w", "w"},
             {"w", "w", "e", "e", "e", "e", "e", "e", "e", "e", "e", "w", "w"},
@@ -27,7 +29,10 @@ public class ServerMain extends SimpleApplication {
             {"w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w"}
     };
 
-    private static String[] carte = {"Green", "Mustard", "Orchid", "Peacock", "Plum", "Scarlett", "persone",
+
+    public static final List<Point> startPositions = new ArrayList<Point>(Arrays.asList(new Point(2,2), new Point(2,2), new Point(2,2), new Point(2,2), new Point(2,2)));
+
+    private static String[] carte = {"Green", "Mustard", "white", "Peacock", "Plum", "Scarlett", "persone",
             "Candeliere", "Pugnale", "Tubo di piombo", "Pistola", "Corda", "Chiave inglese", "armi",
             "Sala da ballo", "Sala del biliardo", "Serra", "Sala da pranzo", "Ingresso", "Cucina", "Biblioteca", "Salotto", "Studio", "luoghi"};
 
@@ -75,6 +80,8 @@ public class ServerMain extends SimpleApplication {
         gameServer.addMessageListener(new ServerListener(), UtNetworking.LobbyDebugMess.class);
         gameServer.addMessageListener(new ServerListener(), UtNetworking.DBMess.class);
         gameServer.addMessageListener(new ServerListener(), UtNetworking.StartNewGame.class);
+        gameServer.addMessageListener(new ServerListener(), UtNetworking.sendMoveToServer.class);
+        gameServer.addMessageListener(new ServerListener(), UtNetworking.sendCardRequestToServer.class);
 
     }
 
@@ -93,7 +100,6 @@ public class ServerMain extends SimpleApplication {
 
     public static String[] getCarte(){
         return carte;
-
     }
 
 
@@ -103,19 +109,8 @@ public class ServerMain extends SimpleApplication {
         private List<UserManager> userInLobbyInfo = new ArrayList<UserManager>();
         private boolean CanSomeoneEntry;
         private boolean isInGame;
-
-       static String mappaTemporanea[][];
-
-       List<String> mazzo = new LinkedList<>(Arrays.asList(getCarte()));
-
-
-        //variabili necessarie in fase di game
-        static int turno;
-        //static String nomeFaseTurno[] = {"lancia dadi", "movimento", "predizione"};
-        String faseTurno = "lancia dadi";
-        String personaTurno = "";
-        int numeroMosse = 0;
-        static String persona, arma, luogo;
+        List<String> mazzo = new LinkedList<>(Arrays.asList(getCarte()));
+        LogicaServer gameLobbyLogic;
 
         public lobbyClass(){}
 
@@ -132,160 +127,17 @@ public class ServerMain extends SimpleApplication {
         public void setLobbyOpened(){ CanSomeoneEntry = true;}
         public void setLobbyClosed(){ CanSomeoneEntry = false;}
         public void startGame(){ isInGame = true;}
+        public List<HostedConnection> getAllUserConnection(){
 
-        /*
-        public void iniziaPartita()
-        {
-            for (int i = 0; i < mappaOriginale.length; i++) {
-                System.arraycopy(mappaOriginale[i], 0, mappaTemporanea[i], 0, mappaOriginale[0].length);
+            List<HostedConnection> connections = new ArrayList<HostedConnection>();
+
+            for (UserManager user:userInLobbyInfo) {
+                connections.add(user.cNetwork);
             }
 
-            estraiCarteVincenti();
-            int nCartePerGiocatore = (mazzo.size())/numeroGiocatori;
-            for(Giocatore g : giocatori)
-            {
-                g.ottieniNote(mazzo);//fornitura ai player delle carte
-                List<String> carteInMano = new LinkedList<>();
-                for(int j = 0; j<nCartePerGiocatore; j++) //distribuzione carte hai giocatori
-                {
-                    int temp = (int)(Math.random()*mazzo.size());
-                    carteInMano.add(mazzo.get(temp));
-                    mazzo.remove(temp);
-                }
-                g.ottieniMano(carteInMano);
-
-                mappaTemporanea[2][2+g.id] = "g"+g.id; // metodo temporaneo per assegnazione della posizione di un giocatore(da cambiare)
-                g.pos.x = 2;
-                g.pos.y = 2+g.id;
-            }
-
-            // per decidere chi comincia
-            turno = (int)(Math.random()*numeroGiocatori);
-            personaTurno = giocatori.get(turno).nomeGiocatore;
-
-            for(Giocatore g : giocatori){//do a tutti i giocatori le carte extra la mappa e decido chi comincia
-                for(int i=0; i<mazzo.size(); i++)
-                    g.cartaVista(mazzo.get(i));
-                g.mappa = mappaTemporanea;
-                g.turno = personaTurno;
-            }
-
+            return connections;
         }
 
-        public void estraiCarteVincenti()
-        {
-            int indexArma=0, indexLuogo=0, indexPersona=0;
-            for(int i = 0; i<carte.length; i++)
-            {
-                if(carte[i]=="persone")
-                    indexPersona = i;
-                if(carte[i]=="armi")
-                    indexArma = i;
-                if(carte[i]=="luoghi")
-                    indexLuogo = i;
-            }
-
-            //salvataggio e rimozione dal mazzo delle carte vincenti
-            persona = mazzo.remove((int)(Math.random()*indexPersona));
-            arma = mazzo.remove((int)(Math.random()*(indexArma-indexPersona-1)+indexPersona+1)-1);
-            luogo = mazzo.remove((int)(Math.random()*(indexLuogo-indexArma-1)+indexArma+1)-2);
-
-            //rimozione delle stringhe "persone" "armi" "luoghi" dal mazzo
-            mazzo.remove(indexPersona-1);
-            mazzo.remove(indexArma-3);
-            mazzo.remove(indexLuogo-5);
-        }
-
-        public void iniziaPartita()
-        {
-            estraiCarteVincenti();
-            int nCartePerGiocatore = (mazzo.size())/numeroGiocatori;
-            for(Giocatore g : giocatori)
-            {
-                g.ottieniNote(mazzo);//fornitura ai player delle carte
-                List<String> carteInMano = new LinkedList<>();
-                for(int j = 0; j<nCartePerGiocatore; j++) //distribuzione carte hai giocatori
-                {
-                    int temp = (int)(Math.random()*mazzo.size());
-                    carteInMano.add(mazzo.get(temp));
-                    mazzo.remove(temp);
-                }
-                g.ottieniMano(carteInMano);
-
-                mappaTemporanea[2][2+g.id] = "g"+g.id; // metodo temporaneo per assegnazione della posizione di un giocatore(da cambiare)
-                g.pos.x = 2;
-                g.pos.y = 2+g.id;
-            }
-
-            // per decidere chi comincia
-            turno = (int)(Math.random()*numeroGiocatori);
-            personaTurno = giocatori.get(turno).nomeGiocatore;
-
-            for(Giocatore g : giocatori){//do a tutti i giocatori le carte extra la mappa e decido chi comincia
-                for(int i=0; i<mazzo.size(); i++)
-                    g.cartaVista(mazzo.get(i));
-                g.mappa = mappaTemporanea;
-                g.turno = personaTurno;
-            }
-
-        }
-        //////////////////////////////////////////////////////////////////////////+
-
-        //funzioni che servono durante la partita
-        public void effettuaMovimento(int x, int y) //spostamento del player a cui bisogna implementare il numero di mosse disponibili
-        {
-            for(Giocatore g : giocatori)
-            {
-                //if(g.idGiocatore == turno && faseTurno == "movimento")
-                if(g.nomeGiocatore==giocatori.get(turno).nomeGiocatore && faseTurno == "movimento")
-                {
-                    if(mappaTemporanea[x][y].contains("g"))
-                        mappaTemporanea[x][y] += "g"+ turno;
-                    else
-                        mappaTemporanea[x][y] = "g"+ turno;
-
-                    mappaTemporanea[g.pos.x][g.pos.y] = mappaTemporanea[g.pos.x][g.pos.y].replace("g"+turno, "");
-                    //System.out.println(mappaTemporanea[g.pos.x][g.pos.y]);
-                    if(mappaTemporanea[g.pos.x][g.pos.y]=="")
-                        mappaTemporanea[g.pos.x][g.pos.y]=mappaOriginale[g.pos.x][g.pos.y];
-
-                    g.pos.x = x;
-                    g.pos.y = y;
-
-
-                    if(mappaTemporanea[x][y]=="r")
-                    {
-                        numeroMosse=0;
-                        g.numeroMosse=0;
-                        faseTurno = "predizione";
-                        g.faseTurno = "predizione";
-                    }
-                    else
-                    {
-                        numeroMosse--;
-                        g.numeroMosse--;
-                        if(numeroMosse==0)
-                            cambiaTurno();
-                    }
-                }
-            }
-        }
-
-        public void cambiaTurno()
-        {
-            if(turno==numeroGiocatori)
-                turno=0;
-            else
-                turno++;
-
-            faseTurno = "lancia dadi";
-
-            for(Giocatore g : giocatori)
-            {
-                g.turno = giocatori.get(turno).nomeGiocatore;
-                g.faseTurno = "lancia dadi";
-            }
-        }*/
     }
 
     private lobbyClass getLobbyById(String lobbyId){
@@ -343,23 +195,47 @@ public class ServerMain extends SimpleApplication {
 
     private void startGame(String idLobby){
 
-        lobbyClass lobby = getLobbyById(idLobby); //ottengo la lobby in cui sta partendo la partita
+        lobbyClass lobby = getLobbyById(idLobby);
+        lobby.gameLobbyLogic = new LogicaServer(mappa, carte, lobby.userInLobbyInfo);
 
+        //ESTRAGGO LE CARTE VINCENTI
+        lobby.gameLobbyLogic.estraiCarteVincenti();
+
+        //DISTRIBUISCO LE CARTE AI GIOCATORI
+        //ottengo la lobby in cui sta partendo la partita
+        int nCartePerGiocatore = (lobby.gameLobbyLogic.mazzo.size())/lobby.userInLobbyInfo.size();
         //invio le informazioni ai giocatori per iniziare a giocare
         for (UserManager user: lobby.userInLobbyInfo) {
-            //ottieniNote(mazzo);//fornitura ai player delle carte da mettere nel server
-            int nCartePerGiocatore = (lobby.mazzo.size())/lobby.userInLobbyInfo.size();
+            //ottieniNote(mazzo);//fornitura ai player delle carte da metter
             List<String> carteInMano = new LinkedList<>();
             for(int j = 0; j<nCartePerGiocatore; j++) //distribuzione carte hai giocatori
             {
                 int temp = (int)(Math.random()*lobby.mazzo.size());
-                carteInMano.add(lobby.mazzo.get(temp));
-                lobby.mazzo.remove(temp);
+                carteInMano.add(lobby.gameLobbyLogic.mazzo.get(temp));
+                lobby.gameLobbyLogic.mazzo.remove(temp);
             }
-            //g.ottieniMano(carteInMano);
-            gameServer.getConnection(user.cNetwork.getId()).send(new UtNetworking.InitForStartingGame());
+            gameServer.getConnection(user.cNetwork.getId()).send(new UtNetworking.InitForStartingGame(nCartePerGiocatore, carteInMano));
         }
 
+
+        //FACCIO VEDERE LE CARTE RIMANENTI A TUTTI I GIOCATORI
+        List<String> carteRimanenti =  lobby.gameLobbyLogic.getCarteRimanenti();
+
+        //DECIDO L'ORDINE DEI TURNI
+        lobby.gameLobbyLogic.setOrdineTurni();
+
+        HashMap<ClientInformation, Point> posizioni = new HashMap<>();
+
+        int cont = 0;
+        //DECIDO LE POSIZIONI DI PARTENZA
+        for (UserManager user:lobby.userInLobbyInfo) {
+            posizioni.put(user.cInfo, startPositions.get(cont));
+            cont++;
+        }
+
+
+        Collection<HostedConnection> collection = lobby.getAllUserConnection();
+        gameServer.broadcast(Filters.in(collection), new UtNetworking.setGameForStart(lobby.gameLobbyLogic.giocatori.get(0).cNetwork, carteRimanenti, posizioni));
 
     }
 
@@ -369,7 +245,7 @@ public class ServerMain extends SimpleApplication {
         public void messageReceived(HostedConnection source, Message m) {
             m.setReliable(false);     //!!senza settare reliable a true il server non riesce a vedere il messaggio che riceve dal client
             if(m instanceof UtNetworking.StartGameMessage){
-                 //!!senza settare reliable a true il server non riesce a vedere il messaggio che riceve dal client
+                //!!senza settare reliable a true il server non riesce a vedere il messaggio che riceve dal client
                 UtNetworking.StartGameMessage mess = (UtNetworking.StartGameMessage) m;
                 System.out.println(UtNetworking.StartGameMessage.getMess());
 
@@ -472,6 +348,3 @@ public class ServerMain extends SimpleApplication {
     }
 
 }
-
-
-
