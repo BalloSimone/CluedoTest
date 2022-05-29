@@ -28,7 +28,7 @@ public class UtNetworking {
         Serializer.registerClass(sendMoveToOtherClient.class);
         Serializer.registerClass(sendCardRequestToServer.class);
         Serializer.registerClass(sendCardRequestToClient.class);
-
+        Serializer.registerClass(Coord.class);
 
     }
 
@@ -221,50 +221,58 @@ public class UtNetworking {
         public List<String> getCarteInMano(){
             return carteInMano;
         }
+
+        public String printMess(){
+            return "Numero carte: "+nCarte+" | carte in mano: "+carteInMano;
+        }
     }
 
     @Serializable
     public static class setGameForStart extends AbstractMessage{  //scelta ordine turni e altre cose
-        private HostedConnection firstUser;
+        private ClientInformation firstUser;
         private List<String> carteVisibili;
-        private HashMap<ClientInformation, Point> posizioniAltriGiocatori;
+        private HashMap<ClientInformation, Coord> posizioniAltriGiocatori;
 
 
         public setGameForStart(){};
 
-        public setGameForStart(HostedConnection firstUser, List<String> carteVisibili, HashMap<ClientInformation, Point> posizioniAltriGiocatori){
+        public setGameForStart(ClientInformation firstUser, List<String> carteVisibili, HashMap<ClientInformation, Coord> posizioniAltriGiocatori){
            this.carteVisibili = carteVisibili;
            this.firstUser = firstUser;
            this.posizioniAltriGiocatori = posizioniAltriGiocatori;
         };
 
-        public HashMap<ClientInformation, Point> getPosizioniAltriGiocatori(){
+        public HashMap<ClientInformation, Coord> getPosizioniAltriGiocatori(){
             return posizioniAltriGiocatori;
         }
 
-        public HostedConnection getFirstUser(){
+        public ClientInformation getFirstUser(){
             return firstUser;
         }
 
         public List<String> getCarteVisibili(){
             return carteVisibili;
         }
+
+        public String printMess(){
+            return "Host: "+firstUser.getUsername()+" | carte visibili: "+carteVisibili+" | posizioni giocatori: "+posizioniAltriGiocatori;
+        }
     }
 
 
     @Serializable
     public static class sendMoveToServer extends AbstractMessage{  //scelta ordine turni e altre cose
-        private Point newPosition;
+        private Coord newPosition;
 
 
         public sendMoveToServer(){};
 
-        public sendMoveToServer(Point newPosition){
+        public sendMoveToServer(Coord newPosition){
             this.newPosition = newPosition;
         };
 
 
-        public Point getNewPosition(){
+        public Coord getNewPosition(){
             return newPosition;
         }
 
@@ -273,18 +281,18 @@ public class UtNetworking {
 
     @Serializable
     public static class sendMoveToOtherClient extends AbstractMessage{
-        private Point newPosition;
+        private Coord newPosition;
         private HostedConnection client;
 
 
         public sendMoveToOtherClient(){};
 
-        public sendMoveToOtherClient(Point newPosition, HostedConnection client){
+        public sendMoveToOtherClient(Coord newPosition, HostedConnection client){
             this.newPosition = newPosition;
             this.client = client;
         };
 
-        public Point getNewPosition() {
+        public Coord getNewPosition() {
             return newPosition;
         }
 

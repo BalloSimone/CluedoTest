@@ -25,9 +25,11 @@ public class LogicaServer {
 
     public LogicaServer(String mappa[][], String carte[], List<ServerMain.UserManager> users)
     {
+        this.carte = carte;
         this.mappa = mappa;
         giocatori = users;
         mazzo = new LinkedList<>(Arrays.asList(carte));
+        carteVincenti = new ArrayList<String>();
 
     }
 

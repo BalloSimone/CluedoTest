@@ -47,9 +47,9 @@ public class GameApplication extends SimpleApplication {
 
         AppSettings settings = new AppSettings(true);
         settings.setTitle("Cluedo");
-        settings.setFullscreen(true);
-        settings.setWidth(1920);
-        settings.setHeight(1080);
+        settings.setFullscreen(false);
+        settings.setWidth(1800);
+        settings.setHeight(900);
         app.setDisplayFps(false);
         app.setDisplayStatView(false);
         app.setSettings(settings);
@@ -74,6 +74,9 @@ public class GameApplication extends SimpleApplication {
         messageListenerInit();
         //
 
+        //PARTE DELL'INIZIALIZZAZIONE DELLA LOGICA
+        logic = new Logica(client);
+
         //PARTE DELL'INIZIALIZZAZIONE DELLA GUI
         niftyGuiInit();
         flyCam.setEnabled(true);
@@ -83,7 +86,6 @@ public class GameApplication extends SimpleApplication {
 
         //INZIALIZZAZIONE DELLA MAPPA
         //loadMap();
-        logic = new Logica(client);
 
         // You must add a light to make the model visible
         DirectionalLight sun = new DirectionalLight();
@@ -112,7 +114,7 @@ public class GameApplication extends SimpleApplication {
         nifty.loadControlFile("nifty-default-controls.xml");
 
         //caricamento della classe contenente la GUI
-        gui = new GUI(nifty, client, new ClientInformation());
+        gui = new GUI(nifty, client, new ClientInformation(), logic);
 
 
         nifty.gotoScreen("loginScreen"); // start the screen
@@ -155,27 +157,45 @@ public class GameApplication extends SimpleApplication {
     }
 
     public void inputListenerInit() {
+        //comandi che il giocatore utilizza nella fase di movimento durante il suo turno
         inputManager.addListener(new ActionListener() {
             @Override
             public void onAction(String name, boolean isPressed, float tpf) {
-                if (isPressed)
+                if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1)
                     client.send(new UtNetworking.EnterLobbyMessage("Voglio entrare!", cInfo));
             }
-        }, "enterLobby");
+        }, "avanti");
 
         inputManager.addListener(new ActionListener() {
             @Override
             public void onAction(String name, boolean isPressed, float tpf) {
-                if (isPressed)
+                if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1)
                     client.send(new UtNetworking.LobbyDebugMess("Mostrami tutte le lobby!"));
             }
-        }, "lobbyDebugMess");
+        }, "indietro");
+
+        inputManager.addListener(new ActionListener() {
+            @Override
+            public void onAction(String name, boolean isPressed, float tpf) {
+                if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1)
+                    client.send(new UtNetworking.LobbyDebugMess("Mostrami tutte le lobby!"));
+            }
+        }, "destra");
+
+        inputManager.addListener(new ActionListener() {
+            @Override
+            public void onAction(String name, boolean isPressed, float tpf) {
+                if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1)
+                    client.send(new UtNetworking.LobbyDebugMess("Mostrami tutte le lobby!"));
+            }
+        }, "sinistra");
     }
 
     public void inputMappingInit() {
-        inputManager.addMapping("teleport", new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
-        inputManager.addMapping("enterLobby", new KeyTrigger(KeyInput.KEY_F2));
-        inputManager.addMapping("lobbyDebugMess", new KeyTrigger(KeyInput.KEY_F1));
+        inputManager.addMapping("avanti", new KeyTrigger(KeyInput.KEY_W));
+        inputManager.addMapping("indietro", new KeyTrigger(KeyInput.KEY_S));
+        inputManager.addMapping("destra", new KeyTrigger(KeyInput.KEY_D));
+        inputManager.addMapping("sinistra", new KeyTrigger(KeyInput.KEY_A));
     }
 
     @Override
@@ -207,11 +227,49 @@ public class GameApplication extends SimpleApplication {
                 break;
             }
             case "Game": {
+                //se non è il mio turno non faccio niente
+                if(!logic.getMyTurn()) return;
+                //se è il mio turno
+                switch (logic.getFaseTurno()){
 
-                //se è il turno del giocatore vengono mostrati questi bottoni
-                getElement("LanciaDadi").setVisible(logic.getMyTurn());
-                getElement("Ipotesi").setVisible(logic.getMyTurn());
-                getElement("Soluzione").setVisible(logic.getMyTurn());
+                    //fase di lancio dadi
+                    case 0:{
+                        //se è il turno del giocatore vengono mostrati questi bottoni
+                        getElement("LanciaDadi").setVisible(true);
+                        getElement("Ipotesi").setVisible(false);
+                        getElement("Soluzione").setVisible(false);
+
+                        break;
+                    }
+
+                    //fase di spostamento
+                    case 1:{
+
+                        break;
+                    }
+
+                    //fase di predizione
+                    case 2:{
+                        //se è il turno del giocatore vengono mostrati questi bottoni
+                        getElement("LanciaDadi").setVisible(false);
+                        getElement("Ipotesi").setVisible(true);
+                        getElement("Soluzione").setVisible(true);
+
+                        break;
+                    }
+
+                    //fase di soluzione
+                    case 3:{
+                        //se è il turno del giocatore vengono mostrati questi bottoni
+                        getElement("LanciaDadi").setVisible(false);
+                        getElement("Ipotesi").setVisible(false);
+                        getElement("Soluzione").setVisible(true);
+
+                        break;
+                    }
+
+                    default:
+                }
 
 
 
@@ -367,9 +425,9 @@ public class GameApplication extends SimpleApplication {
                         getElement("IconUser"+i).setVisible(false);
                 }
 
-                //carte in mano
+                System.out.println(mess.printMess());
 
-                System.out.println(logic.getCarteInMano());
+
             }else if (m instanceof UtNetworking.setGameForStart) {
 
                 UtNetworking.setGameForStart mess = (UtNetworking.setGameForStart) m;
@@ -378,7 +436,7 @@ public class GameApplication extends SimpleApplication {
                 logic.setCarteViste(mess.getCarteVisibili());
 
                 //mi salvo la mia posizione e le altre posizioni dei giocatori
-                HashMap<ClientInformation, Point> posizioni = mess.getPosizioniAltriGiocatori();
+                HashMap<ClientInformation, Coord> posizioni = mess.getPosizioniAltriGiocatori();
 
                 //mi salvo la mia posizione
                 logic.setMiaPosizione(posizioni.get(cInfo));
@@ -389,11 +447,12 @@ public class GameApplication extends SimpleApplication {
                 logic.initPosizioniAltriGiocatori(posizioni);
 
                 //il client controlla se è il primo utente a dover giocare
-                if(mess.getFirstUser().getId() == client.getId())
+                if(mess.getFirstUser().getUsername().equals(cInfo.getUsername()))
                     logic.setMyTurn(true);
                 else
                     logic.setMyTurn(false);
 
+                System.out.println(mess.printMess());
             }
 
         }

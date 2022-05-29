@@ -14,11 +14,13 @@ public class GameController extends BaseAppState implements ScreenController {
     Client clientHostConnected;
     Nifty niftyHostConnected;
     ClientInformation cInfo;
+    Logica logic;
 
-    public GameController(Client c, Nifty nifty, ClientInformation cInfo){
+    public GameController(Client c, Nifty nifty, ClientInformation cInfo, Logica logic){
         clientHostConnected = c;
         niftyHostConnected = nifty;
         this.cInfo = cInfo;
+        this.logic = logic;
     }
 
     @Override
@@ -111,6 +113,23 @@ public class GameController extends BaseAppState implements ScreenController {
 
             }
         });
+    }
+
+    public void lanciaDadi(){
+        //il giocatore lancia i dadi
+        logic.lanciaDadi();
+
+        //il giocatore passa alla fase successiva
+        logic.setFaseTurno(1);
+    }
+
+    public void predizione(){
+        //il giocatore passa alla schermata di predizione
+        niftyHostConnected.gotoScreen("predictionScreen");
+    }
+
+    public void soluzione(){
+        niftyHostConnected.gotoScreen("solutionScreen");
     }
 
 }

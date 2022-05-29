@@ -12,11 +12,13 @@ public class GUI {
     Nifty nifty;
     Client client;
     ClientInformation cInfo;
+    Logica clientLogic;
 
-    public GUI(Nifty nifty, Client client, ClientInformation cInfo){
+    public GUI(Nifty nifty, Client client, ClientInformation cInfo, Logica logic){
         this.nifty = nifty;
         this.client = client;
         this.cInfo = cInfo;
+        this.clientLogic = logic;
         initScreen();
 
     }
@@ -34,7 +36,7 @@ public class GUI {
 
     public void registrationScreen(){
         nifty.addScreen("registrationScreen", new ScreenBuilder("registrationScreen") {{
-            controller(new GameController(client, nifty, cInfo));
+            controller(new GameController(client, nifty, cInfo, clientLogic));
 
 
             layer(new LayerBuilder("background") {{
@@ -165,7 +167,7 @@ public class GUI {
 
         //schermo di login
         nifty.addScreen("loginScreen", new ScreenBuilder("loginScreen") {{
-            controller(new GameController(client, nifty, cInfo));
+            controller(new GameController(client, nifty, cInfo, clientLogic));
 
             layer(new LayerBuilder("background") {{
                 childLayoutVertical();
@@ -297,7 +299,7 @@ public class GUI {
     public void home(){
         //schermo di start
         nifty.addScreen("home", new ScreenBuilder("home") {{
-            controller(new GameController(client, nifty, cInfo)); //dichiaro il gamecontroller per l'interazione tra la gui e la logica
+            controller(new GameController(client, nifty, cInfo, clientLogic)); //dichiaro il gamecontroller per l'interazione tra la gui e la logica
             //LAYER DI BACKGROUND
             layer(new LayerBuilder("background") {{
                 childLayoutCenter();
@@ -441,7 +443,7 @@ public class GUI {
     public void startGameScreen(){
         //HUD
         nifty.addScreen("startGameScreen", new ScreenBuilder("startGameScreen") {{
-            controller(new GameController(client, nifty, cInfo));
+            controller(new GameController(client, nifty, cInfo, clientLogic));
 
             layer(new LayerBuilder("background") {{
                 childLayoutCenter();
@@ -547,7 +549,7 @@ public class GUI {
     public void lobbyScreen(){
         //schermo di lobby
         nifty.addScreen("lobbyscreen", new ScreenBuilder("lobbyscreen") {{
-            controller(new GameController(client, nifty, cInfo));
+            controller(new GameController(client, nifty, cInfo, clientLogic));
 
             layer(new LayerBuilder("background") {{
                 childLayoutCenter();
@@ -781,7 +783,7 @@ public class GUI {
     public void gameScreen() {
         //schermo di lobby
         nifty.addScreen("Game", new ScreenBuilder("Game") {{
-            controller(new GameController(client, nifty, cInfo));
+            controller(new GameController(client, nifty, cInfo, clientLogic));
 
             layer(new LayerBuilder("background") {{
                 childLayoutCenter();
@@ -943,7 +945,7 @@ public class GUI {
                             name("button");
                             width("20%");
                             height("50%");
-
+                            interactOnClick("lanciaDadi()");
                         }});
 
 
@@ -971,7 +973,7 @@ public class GUI {
                                 name("button");
                                 width("100%");
                                 height("30%");
-
+                                interactOnClick("predizione()");
                             }});
 
                             panel(new PanelBuilder("SeparatorButton"){{
@@ -986,6 +988,7 @@ public class GUI {
                                 name("button");
                                 width("100%");
                                 height("30%");
+                                interactOnClick("soluzione()");
 
                             }});
 

@@ -3,7 +3,6 @@ import com.jme3.network.HostedConnection;
 
 import java.awt.*;
 import java.util.*;
-import java.awt.Point;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,7 +21,6 @@ public class Logica {
         1 -> spostamento
         2 -> predizione (eventuale)
         3 -> ipotesi finale (eventuale)
-        4 -> non il mio turno
      */
 
     //mappa
@@ -42,8 +40,8 @@ public class Logica {
     private List<String> carteInMano, carteViste;
     private List<Integer> note;
     private boolean isMyTurn;
-    private Point posizione;
-    private HashMap<ClientInformation, Point> posizioneAltriGiocatori;
+    private Coord posizione;
+    private HashMap<ClientInformation, Coord> posizioneAltriGiocatori;
     private int faseTurno;
     private Client client;
 
@@ -59,7 +57,7 @@ public class Logica {
         note = new ArrayList<Integer>();
         carteInMano = new LinkedList<>();
         carteViste = new ArrayList<>();
-        posizione = new Point();
+        posizione = new Coord();
         faseTurno = 0;
         this.client = client;
         posizioneAltriGiocatori = new HashMap<>();
@@ -67,15 +65,15 @@ public class Logica {
 
     /////////////////////////////////////////////////////////////////////////////
 
-    public HashMap<ClientInformation, Point> getPosizioniAltriGiocatori(){
+    public HashMap<ClientInformation, Coord> getPosizioniAltriGiocatori(){
         return posizioneAltriGiocatori;
     }
 
-    public void initPosizioniAltriGiocatori(HashMap<ClientInformation, Point> posizioni){
+    public void initPosizioniAltriGiocatori(HashMap<ClientInformation, Coord> posizioni){
         posizioneAltriGiocatori = posizioni;
     }
 
-    public void cambiaPosizioneAltroGiocatore(ClientInformation giocatore, Point newPosition){
+    public void cambiaPosizioneAltroGiocatore(ClientInformation giocatore, Coord newPosition){
         posizioneAltriGiocatori.put(giocatore, newPosition);
     }
 
@@ -149,24 +147,23 @@ public class Logica {
 
     /////////////////////////////////////////////////////////////////////////////
 
-    public void setMiaPosizione(Point newPosition){
+    public void setMiaPosizione(Coord newPosition){
         posizione = newPosition;
     }
 
-    public Point getMiaPosizione(){
+    public Coord getMiaPosizione(){
         return posizione;
     }
 
 
-    public void movimento(Point newPosition) {
+    public void movimento(Coord newPosition) {
         //cambiaMosse
         if (newPosition.x < 8 && newPosition.x > -1 && newPosition.y < 13 && newPosition.y > -1 && !mappa[newPosition.x][newPosition.y].equals("w")) {
             posizione.move(newPosition.x, newPosition.y);
+            //cambia il numero di movimenti disponibili
+            numeroMosse--;
         }
 
-
-        //cambia il numero di movimenti disponibili
-        numeroMosse--;
 
         //se il client entra in una stanza non si può più muovere
         if(mappa[posizione.x][posizione.y].equals("r")){

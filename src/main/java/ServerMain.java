@@ -30,7 +30,7 @@ public class ServerMain extends SimpleApplication {
     };
 
 
-    public static final List<Point> startPositions = new ArrayList<Point>(Arrays.asList(new Point(2,2), new Point(2,2), new Point(2,2), new Point(2,2), new Point(2,2)));
+    public static final List<Coord> startPositions = new ArrayList<Coord>(Arrays.asList(new Coord(2,2), new Coord(2,2), new Coord(2,2), new Coord(2,2), new Coord(2,2)));
 
     private static String[] carte = {"Green", "Mustard", "white", "Peacock", "Plum", "Scarlett", "persone",
             "Candeliere", "Pugnale", "Tubo di piombo", "Pistola", "Corda", "Chiave inglese", "armi",
@@ -207,10 +207,10 @@ public class ServerMain extends SimpleApplication {
         //invio le informazioni ai giocatori per iniziare a giocare
         for (UserManager user: lobby.userInLobbyInfo) {
             //ottieniNote(mazzo);//fornitura ai player delle carte da metter
-            List<String> carteInMano = new LinkedList<>();
-            for(int j = 0; j<nCartePerGiocatore; j++) //distribuzione carte hai giocatori
+            List<String> carteInMano = new ArrayList<>();
+            for(int j = 0; j<nCartePerGiocatore; j++) //distribuzione carte ai giocatori
             {
-                int temp = (int)(Math.random()*lobby.mazzo.size());
+                int temp = (int)(Math.random()*(lobby.gameLobbyLogic.mazzo.size()-1));
                 carteInMano.add(lobby.gameLobbyLogic.mazzo.get(temp));
                 lobby.gameLobbyLogic.mazzo.remove(temp);
             }
@@ -224,7 +224,7 @@ public class ServerMain extends SimpleApplication {
         //DECIDO L'ORDINE DEI TURNI
         lobby.gameLobbyLogic.setOrdineTurni();
 
-        HashMap<ClientInformation, Point> posizioni = new HashMap<>();
+        HashMap<ClientInformation, Coord> posizioni = new HashMap<>();
 
         int cont = 0;
         //DECIDO LE POSIZIONI DI PARTENZA
@@ -235,7 +235,7 @@ public class ServerMain extends SimpleApplication {
 
 
         Collection<HostedConnection> collection = lobby.getAllUserConnection();
-        gameServer.broadcast(Filters.in(collection), new UtNetworking.setGameForStart(lobby.gameLobbyLogic.giocatori.get(0).cNetwork, carteRimanenti, posizioni));
+        gameServer.broadcast(Filters.in(collection), new UtNetworking.setGameForStart(lobby.gameLobbyLogic.giocatori.get(0).cInfo, carteRimanenti, posizioni));
 
     }
 
