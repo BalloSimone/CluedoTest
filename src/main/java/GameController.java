@@ -120,7 +120,7 @@ public class GameController extends BaseAppState implements ScreenController {
     public void lanciaDadi(){
         //il giocatore lancia i dadi
         logic.lanciaDadi();
-
+        System.out.println(logic.getNumeroMosse());
         //il giocatore passa alla fase successiva
         logic.setFaseTurno(1);
     }

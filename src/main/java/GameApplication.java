@@ -171,7 +171,7 @@ public class GameApplication extends SimpleApplication {
         inputManager.addListener(new ActionListener() {
             @Override
             public void onAction(String name, boolean isPressed, float tpf) {
-                if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1){
+                if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1 && logic.getNumeroMosse() > 0){
                     if(logic.movimento(new Coord(logic.getMiaPosizione().x, logic.getMiaPosizione().y+1)))
                         client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo));
                 }
@@ -181,7 +181,7 @@ public class GameApplication extends SimpleApplication {
         inputManager.addListener(new ActionListener() {
             @Override
             public void onAction(String name, boolean isPressed, float tpf) {
-                if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1){
+                if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1 && logic.getNumeroMosse() > 0){
                     if(logic.movimento(new Coord(logic.getMiaPosizione().x+1, logic.getMiaPosizione().y)))
                         client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo));
                 }
@@ -191,7 +191,7 @@ public class GameApplication extends SimpleApplication {
         inputManager.addListener(new ActionListener() {
             @Override
             public void onAction(String name, boolean isPressed, float tpf) {
-                if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1){
+                if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1 && logic.getNumeroMosse() > 0){
                     if(logic.movimento(new Coord(logic.getMiaPosizione().x-1, logic.getMiaPosizione().y)))
                         client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo));
                 }
