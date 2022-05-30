@@ -26,10 +26,8 @@ import de.lessvoid.nifty.screen.Screen;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 
 
 public class GameApplication extends SimpleApplication {
@@ -276,7 +274,7 @@ public class GameApplication extends SimpleApplication {
 
                     //fase di spostamento
                     case 1:{
-
+                        getElement("LanciaDadi").setVisible(false);
                         break;
                     }
 
@@ -463,13 +461,18 @@ public class GameApplication extends SimpleApplication {
                 //mi salvo la mia posizione e le altre posizioni dei giocatori
                 HashMap<ClientInformation, Coord> posizioni = mess.getPosizioniAltriGiocatori();
 
-                //mi salvo la mia posizione
-                logic.setMiaPosizione(posizioni.get(cInfo));
-                posizioni.remove(cInfo);
 
 
-                //salvo la posizione degli altri giocatori
-                logic.initPosizioniAltriGiocatori(posizioni);
+                //mi salvo la mia posizione e quella degli altri giocatori
+                for(Map.Entry<ClientInformation, Coord> pos : posizioni.entrySet()){
+                    if(pos.getKey().getUsername().equals(cInfo.getUsername()))
+                        logic.setMiaPosizione(pos.getValue());
+                    else
+                        logic.addPosizioniAltriGiocatori(pos.getKey().getUsername(), pos.getValue());
+                }
+
+
+
 
                 //il client controlla se è il primo utente a dover giocare
 
@@ -483,9 +486,10 @@ public class GameApplication extends SimpleApplication {
 
                 UtNetworking.sendMove mess = (UtNetworking.sendMove) m;
                 Coord newPosition = mess.getNewPosition();
+                System.out.println(mess.getClient().getUsername()+" si è spostato alle coordinate "+newPosition.x+" "+newPosition.y);
 
                 //aggiorno la posizione del giocatore che si è mosso
-                logic.getPosizioniAltriGiocatori().put(mess.getClient(), newPosition);
+                logic.getPosizioniAltriGiocatori().put(mess.getClient().getUsername(), newPosition);
 
             }
 

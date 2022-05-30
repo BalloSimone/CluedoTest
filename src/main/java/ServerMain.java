@@ -355,9 +355,13 @@ public class ServerMain extends SimpleApplication {
                 startGame(idLobby); //starto il game di quella lobby
 
             }else if(m instanceof UtNetworking.sendMove) {
+
                 UtNetworking.sendMove mess = (UtNetworking.sendMove) m;
                 //mi salvo la nuova posizione
                 Coord newPosition = mess.getNewPosition();
+
+                //debug
+                System.out.println("Richiesta di spostamento inviata da "+mess.getClient().getUsername());
 
                 //trovo la lobby
                 lobbyClass lobby = getLobbyByUser(source);
@@ -370,6 +374,8 @@ public class ServerMain extends SimpleApplication {
                     if(user.cNetwork.getId() != source.getId())
                         gameServer.getConnection(user.cNetwork.getId()).send(new UtNetworking.sendMove(newPosition, mess.getClient()));
                 }
+
+
             }else if(m instanceof UtNetworking.sendCardRequest) {
                 UtNetworking.sendCardRequest mess = (UtNetworking.sendCardRequest) m;
 
