@@ -24,10 +24,8 @@ public class UtNetworking {
         Serializer.registerClass(StartNewGame.class);
         Serializer.registerClass(InitForStartingGame.class);
         Serializer.registerClass(setGameForStart.class);
-        Serializer.registerClass(sendMoveToServer.class);
-        Serializer.registerClass(sendMoveToOtherClient.class);
-        Serializer.registerClass(sendCardRequestToServer.class);
-        Serializer.registerClass(sendCardRequestToClient.class);
+        Serializer.registerClass(sendMove.class);
+        Serializer.registerClass(sendCardRequest.class);
         Serializer.registerClass(Coord.class);
 
     }
@@ -260,34 +258,17 @@ public class UtNetworking {
     }
 
 
-    @Serializable
-    public static class sendMoveToServer extends AbstractMessage{  //scelta ordine turni e altre cose
-        private Coord newPosition;
-
-
-        public sendMoveToServer(){};
-
-        public sendMoveToServer(Coord newPosition){
-            this.newPosition = newPosition;
-        };
-
-
-        public Coord getNewPosition(){
-            return newPosition;
-        }
-
-    }
 
 
     @Serializable
-    public static class sendMoveToOtherClient extends AbstractMessage{
+    public static class sendMove extends AbstractMessage{
         private Coord newPosition;
-        private HostedConnection client;
+        private ClientInformation client;
 
 
-        public sendMoveToOtherClient(){};
+        public sendMove(){};
 
-        public sendMoveToOtherClient(Coord newPosition, HostedConnection client){
+        public sendMove(Coord newPosition, ClientInformation client){
             this.newPosition = newPosition;
             this.client = client;
         };
@@ -296,35 +277,20 @@ public class UtNetworking {
             return newPosition;
         }
 
-        public HostedConnection getClient() {
+        public ClientInformation getClient() {
             return client;
         }
     }
 
 
     @Serializable
-    public static class sendCardRequestToServer extends AbstractMessage{
+    public static class sendCardRequest extends AbstractMessage{
         private List<String> carteRichieste;
+        private ClientInformation client;
 
-        public sendCardRequestToServer(){};
+        public sendCardRequest(){};
 
-        public sendCardRequestToServer(List<String> carteRichieste){
-            this.carteRichieste = carteRichieste;
-        };
-
-        public List<String> getCarteRichieste() {
-            return carteRichieste;
-        }
-    }
-
-    @Serializable
-    public static class sendCardRequestToClient extends AbstractMessage{
-        private List<String> carteRichieste;
-        private HostedConnection client;
-
-        public sendCardRequestToClient(){};
-
-        public sendCardRequestToClient(List<String> carteRichieste, HostedConnection client){
+        public sendCardRequest(List<String> carteRichieste, ClientInformation client){
             this.carteRichieste = carteRichieste;
             this.client = client;
         };
@@ -333,7 +299,7 @@ public class UtNetworking {
             return carteRichieste;
         }
 
-        public HostedConnection getClient() {
+        public ClientInformation getClient() {
             return client;
         }
     }

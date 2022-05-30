@@ -115,6 +115,8 @@ public class GameController extends BaseAppState implements ScreenController {
         });
     }
 
+    /////////////////////////////////////////////////////////////////////////////
+
     public void lanciaDadi(){
         //il giocatore lancia i dadi
         logic.lanciaDadi();
@@ -123,10 +125,30 @@ public class GameController extends BaseAppState implements ScreenController {
         logic.setFaseTurno(1);
     }
 
+    /////////////////////////////////////////////////////////////////////////////
+
     public void predizione(){
         //il giocatore passa alla schermata di predizione
         niftyHostConnected.gotoScreen("predictionScreen");
     }
+
+    public void addPersona(String carta){
+        logic.setPersonaDaMostrareAlPlayer(carta);
+    }
+
+    public void addArma(String carta){
+        logic.setArmaDaMostrareAlPlayer(carta);
+    }
+
+    public void addLuogo(String carta){
+        logic.setLuogoDaMostrareAlPlayer(carta);
+    }
+
+    public void effettuaPredizione(){
+        clientHostConnected.send(new UtNetworking.sendCardRequest(logic.getCarteRichieste(), cInfo));
+    }
+
+    /////////////////////////////////////////////////////////////////////////////
 
     public void soluzione(){
         niftyHostConnected.gotoScreen("solutionScreen");

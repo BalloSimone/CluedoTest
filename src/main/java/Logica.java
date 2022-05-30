@@ -47,6 +47,7 @@ public class Logica {
 
     //altre variabili
     private int numeroMosse;
+    private List<String> carteRichieste;
 
 
 
@@ -61,6 +62,7 @@ public class Logica {
         faseTurno = 0;
         this.client = client;
         posizioneAltriGiocatori = new HashMap<>();
+        carteRichieste = new ArrayList<>();
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -156,26 +158,43 @@ public class Logica {
     }
 
 
-    public void movimento(Coord newPosition) {
+    public boolean movimento(Coord newPosition) {
         //cambiaMosse
         if (newPosition.x < 8 && newPosition.x > -1 && newPosition.y < 13 && newPosition.y > -1 && !mappa[newPosition.x][newPosition.y].equals("w")) {
             posizione.move(newPosition.x, newPosition.y);
             //cambia il numero di movimenti disponibili
             numeroMosse--;
+
+            //se il client entra in una stanza non si può più muovere
+            if(mappa[posizione.x][posizione.y].equals("r")){
+                numeroMosse = 0;
+            }
+
+            return true;
         }
 
+        return false;
 
-        //se il client entra in una stanza non si può più muovere
-        if(mappa[posizione.x][posizione.y].equals("r")){
-            numeroMosse = 0;
-        }
-
-
-        //invia il movimento al server
-        //client.send();
     }
 
     /////////////////////////////////////////////////////////////////////////////
+
+
+    public void setPersonaDaMostrareAlPlayer(String carta){
+        carteRichieste.set(0, carta);
+    }
+
+    public void setArmaDaMostrareAlPlayer(String carta){
+        carteRichieste.set(1, carta);
+    }
+
+    public void setLuogoDaMostrareAlPlayer(String carta){
+        carteRichieste.set(2, carta);
+    }
+
+    public List<String> getCarteRichieste(){
+        return carteRichieste;
+    }
 
     public List<String> carteDaPoterMostrareAlPlayer(List<String> carteRichieste){
 

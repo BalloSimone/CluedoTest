@@ -80,8 +80,8 @@ public class ServerMain extends SimpleApplication {
         gameServer.addMessageListener(new ServerListener(), UtNetworking.LobbyDebugMess.class);
         gameServer.addMessageListener(new ServerListener(), UtNetworking.DBMess.class);
         gameServer.addMessageListener(new ServerListener(), UtNetworking.StartNewGame.class);
-        gameServer.addMessageListener(new ServerListener(), UtNetworking.sendMoveToServer.class);
-        gameServer.addMessageListener(new ServerListener(), UtNetworking.sendCardRequestToServer.class);
+        gameServer.addMessageListener(new ServerListener(), UtNetworking.sendMove.class);
+        gameServer.addMessageListener(new ServerListener(), UtNetworking.sendCardRequest.class);
 
     }
 
@@ -155,6 +155,17 @@ public class ServerMain extends SimpleApplication {
             userNames.add(user.cInfo.getUsername());
         }
         return userNames;
+    }
+
+    private lobbyClass getLobbyByUser(HostedConnection user){
+        for (lobbyClass lobby: activeLobbies){
+            for (UserManager users: lobby.userInLobbyInfo) {
+               if(users.cNetwork == user)
+                   return lobby;
+            }
+        }
+
+        return null;
     }
 
     private List<UserManager> getAllUsers(lobbyClass lobbyClass){
@@ -342,6 +353,28 @@ public class ServerMain extends SimpleApplication {
                 UtNetworking.StartNewGame mess = (UtNetworking.StartNewGame) m;
                 String idLobby = mess.getIdLobby();
                 startGame(idLobby); //starto il game di quella lobby
+
+            }else if(m instanceof UtNetworking.sendMove) {
+                UtNetworking.sendMove mess = (UtNetworking.sendMove) m;
+                //mi salvo la nuova posizione
+                Coord newPosition = mess.getNewPosition();
+
+                //trovo la lobby
+                lobbyClass lobby = getLobbyByUser(source);
+
+                //trovo gli utenti a cui devo inviare il messaggio
+                List<UserManager> destinationHosts = getAllUsers(lobby);
+
+                //invio il messaggio
+                for (UserManager user:destinationHosts) {
+                    if(user.cNetwork.getId() != source.getId())
+                        gameServer.getConnection(user.cNetwork.getId()).send(new UtNetworking.sendMove(newPosition, mess.getClient()));
+                }
+            }else if(m instanceof UtNetworking.sendCardRequest) {
+                UtNetworking.sendCardRequest mess = (UtNetworking.sendCardRequest) m;
+
+
+
 
             }
         }

@@ -152,8 +152,8 @@ public class GameApplication extends SimpleApplication {
         client.addMessageListener(new ClientLIstener(), UtNetworking.YouAreTheHost.class);
         client.addMessageListener(new ClientLIstener(), UtNetworking.InitForStartingGame.class);
         client.addMessageListener(new ClientLIstener(), UtNetworking.setGameForStart.class);
-        client.addMessageListener(new ClientLIstener(), UtNetworking.sendMoveToOtherClient.class);
-        client.addMessageListener(new ClientLIstener(), UtNetworking.sendCardRequestToClient.class);
+        client.addMessageListener(new ClientLIstener(), UtNetworking.sendMove.class);
+        client.addMessageListener(new ClientLIstener(), UtNetworking.sendCardRequest.class);
     }
 
     public void inputListenerInit() {
@@ -161,32 +161,40 @@ public class GameApplication extends SimpleApplication {
         inputManager.addListener(new ActionListener() {
             @Override
             public void onAction(String name, boolean isPressed, float tpf) {
-                if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1)
-                    client.send(new UtNetworking.EnterLobbyMessage("Voglio entrare!", cInfo));
+                if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1){
+                    if(logic.movimento(new Coord(logic.getMiaPosizione().x, logic.getMiaPosizione().y-1)))
+                        client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo));
+                }
             }
         }, "avanti");
 
         inputManager.addListener(new ActionListener() {
             @Override
             public void onAction(String name, boolean isPressed, float tpf) {
-                if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1)
-                    client.send(new UtNetworking.LobbyDebugMess("Mostrami tutte le lobby!"));
+                if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1){
+                    if(logic.movimento(new Coord(logic.getMiaPosizione().x, logic.getMiaPosizione().y+1)))
+                        client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo));
+                }
             }
         }, "indietro");
 
         inputManager.addListener(new ActionListener() {
             @Override
             public void onAction(String name, boolean isPressed, float tpf) {
-                if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1)
-                    client.send(new UtNetworking.LobbyDebugMess("Mostrami tutte le lobby!"));
+                if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1){
+                    if(logic.movimento(new Coord(logic.getMiaPosizione().x+1, logic.getMiaPosizione().y)))
+                        client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo));
+                }
             }
         }, "destra");
 
         inputManager.addListener(new ActionListener() {
             @Override
             public void onAction(String name, boolean isPressed, float tpf) {
-                if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1)
-                    client.send(new UtNetworking.LobbyDebugMess("Mostrami tutte le lobby!"));
+                if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1){
+                    if(logic.movimento(new Coord(logic.getMiaPosizione().x-1, logic.getMiaPosizione().y)))
+                        client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo));
+                }
             }
         }, "sinistra");
     }
@@ -201,6 +209,13 @@ public class GameApplication extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         updateNiftyGUI();
+        controlloFaseTurno();
+
+    }
+
+    private void controlloFaseTurno(){
+        if(logic.getFaseTurno() == 1 && logic.getNumeroMosse() == 0)
+            logic.setFaseTurno(2);
     }
 
     private void updateNiftyGUI() {
@@ -453,6 +468,14 @@ public class GameApplication extends SimpleApplication {
                     logic.setMyTurn(false);
 
                 System.out.println(mess.printMess());
+            }else if (m instanceof UtNetworking.sendMove) {
+
+                UtNetworking.sendMove mess = (UtNetworking.sendMove) m;
+                Coord newPosition = mess.getNewPosition();
+
+                //aggiorno la posizione del giocatore che si è mosso
+                logic.getPosizioniAltriGiocatori().put(mess.getClient(), newPosition);
+
             }
 
         }
