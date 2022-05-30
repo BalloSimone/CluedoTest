@@ -242,8 +242,25 @@ public class GameApplication extends SimpleApplication {
                 break;
             }
             case "Game": {
+
+                //icone personaggi
+                try {
+                    for (int i = 1; i <= 6; i++) {
+                        if (i <= usersInMyLobby.size())
+                            getElement("IconUser" + i).setVisible(true);
+                        else
+                            getElement("IconUser" + i).setVisible(false);
+                    }
+                }catch(Exception e){}
+
                 //se non è il mio turno non faccio niente
-                if(!logic.getMyTurn()) return;
+                if(!logic.getMyTurn()){
+                    getElement("LanciaDadi").setVisible(false);
+                    getElement("Ipotesi").setVisible(false);
+                    getElement("Soluzione").setVisible(false);
+                    return;
+                }
+
                 //se è il mio turno
                 switch (logic.getFaseTurno()){
 
@@ -432,13 +449,6 @@ public class GameApplication extends SimpleApplication {
 
                 //inizializzo a livello grafico l'interfaccia Game
 
-                //icone personaggi
-                for(int i=1; i<=6; i++){
-                    if(i <= usersInMyLobby.size())
-                        getElement("IconUser"+i).setVisible(true);
-                    else
-                        getElement("IconUser"+i).setVisible(false);
-                }
 
                 System.out.println(mess.printMess());
 
@@ -462,6 +472,7 @@ public class GameApplication extends SimpleApplication {
                 logic.initPosizioniAltriGiocatori(posizioni);
 
                 //il client controlla se è il primo utente a dover giocare
+
                 if(mess.getFirstUser().getUsername().equals(cInfo.getUsername()))
                     logic.setMyTurn(true);
                 else
