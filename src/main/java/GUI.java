@@ -54,7 +54,7 @@ public class GUI {
                     childLayoutHorizontal();
                     backgroundColor("#0000");
                     height("25%");
-                    width("100%");
+                    width("80%");
 
                     text(new TextBuilder("tpersone"){{
                         marginLeft("3%");
@@ -73,60 +73,89 @@ public class GUI {
                         name("button");
                         alignCenter();
                         valignCenter();
-                        width("5%");
+                        width("6%");
                         height("70%");
                         interactOnClick("addPersona(\"Scarlett\")");
-                        paddingLeft("3%");
+                    }});
+
+                    panel(new PanelBuilder("separator1"){{
+                        childLayoutHorizontal();
+                        backgroundColor("#0000");
+                        height("5%");
+                        width("5%");
                     }});
 
                     control(new ButtonBuilder("Green",""){{
                         name("button");
                         alignCenter();
                         valignCenter();
-                        width("5%");
+                        width("6%");
                         height("70%");
                         interactOnClick("addPersona(\"Green\")");
-                        paddingLeft("3%");
+                    }});
+
+                    panel(new PanelBuilder("separator2"){{
+                        childLayoutHorizontal();
+                        backgroundColor("#0000");
+                        height("5%");
+                        width("5%");
                     }});
 
                     control(new ButtonBuilder("Mustard",""){{
                         name("button");
                         alignCenter();
                         valignCenter();
-                        width("5%");
+                        width("6%");
                         height("70%");
                         interactOnClick("addPersona(\"Mustard\")");
-                        paddingLeft("3%");
+                    }});
+
+                    panel(new PanelBuilder("separator3"){{
+                        childLayoutHorizontal();
+                        backgroundColor("#0000");
+                        height("5%");
+                        width("5%");
                     }});
 
                     control(new ButtonBuilder("White",""){{
                         name("button");
                         alignCenter();
                         valignCenter();
-                        width("5%");
+                        width("6%");
                         height("70%");
                         interactOnClick("addPersona(\"White\")");
-                        paddingLeft("3%");
+                    }});
+
+                    panel(new PanelBuilder("separator4"){{
+                        childLayoutHorizontal();
+                        backgroundColor("#0000");
+                        height("5%");
+                        width("5%");
                     }});
 
                     control(new ButtonBuilder("Peacock",""){{
                         name("button");
                         alignCenter();
                         valignCenter();
-                        width("5%");
+                        width("6%");
                         height("70%");
                         interactOnClick("addPersona(\"Peacock\")");
-                        paddingLeft("3%");
+                    }});
+
+                    panel(new PanelBuilder("separator5"){{
+                        childLayoutHorizontal();
+                        backgroundColor("#0000");
+                        height("5%");
+                        width("5%");
                     }});
 
                     control(new ButtonBuilder("Plum",""){{
                         name("button");
                         alignCenter();
                         valignCenter();
-                        width("5%");
+                        width("6%");
                         height("70%");
                         interactOnClick("addPersona(\"Plum\")");
-                        paddingLeft("3%");
                     }});
 
 
@@ -150,6 +179,7 @@ public class GUI {
 
                         text(new TextBuilder("tarmi"){{
                             marginLeft("3%");
+                            valignCenter();
                             text("Armi");
                             font("Interface/Fonts/Default.fnt");
                             backgroundColor("#0000");
@@ -165,60 +195,90 @@ public class GUI {
                             name("button");
                             alignCenter();
                             valignCenter();
-                            width("5%");
+                            width("6%");
                             height("70%");
                             interactOnClick("addArma(\"Candeliere\")");
-                            paddingLeft("3%");
+                        }});
+
+                        panel(new PanelBuilder("separator7"){{
+                            childLayoutHorizontal();
+                            backgroundColor("#0000");
+                            height("5%");
+                            width("5%");
                         }});
 
                         control(new ButtonBuilder("Pugnale",""){{
                             name("button");
                             alignCenter();
                             valignCenter();
-                            width("5%");
+                            width("6%");
                             height("70%");
                             interactOnClick("addArma(\"Pugnale\")");
-                            paddingLeft("3%");
+                        }});
+
+                        panel(new PanelBuilder("separator8"){{
+                            childLayoutHorizontal();
+                            backgroundColor("#0000");
+                            height("5%");
+                            width("5%");
                         }});
 
                         control(new ButtonBuilder("Tubo di piombo",""){{
                             name("button");
                             alignCenter();
                             valignCenter();
-                            width("5%");
+                            width("6%");
                             height("70%");
                             interactOnClick("addArma(\"Tubo di piombo\")");
-                            paddingLeft("3%");
+
+                        }});
+
+                        panel(new PanelBuilder("separator9"){{
+                            childLayoutHorizontal();
+                            backgroundColor("#0000");
+                            height("5%");
+                            width("5%");
                         }});
 
                         control(new ButtonBuilder("Pistola",""){{
                             name("button");
                             alignCenter();
                             valignCenter();
-                            width("5%");
+                            width("6%");
                             height("70%");
                             interactOnClick("addArma(\"Pistola\")");
-                            paddingLeft("3%");
+                        }});
+
+                        panel(new PanelBuilder("separator10"){{
+                            childLayoutHorizontal();
+                            backgroundColor("#0000");
+                            height("5%");
+                            width("5%");
                         }});
 
                         control(new ButtonBuilder("Corda",""){{
                             name("button");
                             alignCenter();
                             valignCenter();
-                            width("5%");
+                            width("6%");
                             height("70%");
                             interactOnClick("addArma(\"Corda\")");
-                            paddingLeft("3%");
+                        }});
+
+                        panel(new PanelBuilder("separator11"){{
+                            childLayoutHorizontal();
+                            backgroundColor("#0000");
+                            height("5%");
+                            width("5%");
                         }});
 
                         control(new ButtonBuilder("Chiave inglese",""){{
                             name("button");
                             alignCenter();
                             valignCenter();
-                            width("5%");
+                            width("6%");
                             height("70%");
                             interactOnClick("addArma(\"Chiave inglese\")");
-                            paddingLeft("3%");
                         }});
 
 
@@ -239,7 +299,7 @@ public class GUI {
                             name("button");
                             alignCenter();
                             valignCenter();
-                            width("80%");
+                            width("85%");
                             height("30%");
                             interactOnClick("effettuaPredizione()");
 
@@ -249,7 +309,7 @@ public class GUI {
                             name("button");
                             alignCenter();
                             valignCenter();
-                            width("80%");
+                            width("85%");
                             height("30%");
 
                         }});
@@ -258,15 +318,23 @@ public class GUI {
 
                 }});
 
+
+                panel(new PanelBuilder("separator12"){{
+                    childLayoutHorizontal();
+                    backgroundColor("#0000");
+                    height("3%");
+                    width("0.1%");
+                }});
+
                 //luoghi
                 panel(new PanelBuilder("Luoghi"){{
                     childLayoutHorizontal();
                     backgroundColor("#0000");
-                    height("30%");
-                    width("20%");
+                    height("40%");
+                    width("100%");
 
                     text(new TextBuilder("tluoghi"){{
-                        marginLeft("3%");
+                        valignCenter();
                         text("Luoghi");
                         font("Interface/Fonts/Default.fnt");
                         backgroundColor("#0000");
@@ -282,22 +350,34 @@ public class GUI {
                         name("button");
                         alignCenter();
                         valignTop();
-                        width("5%");
-                        height("70%");
+                        width("4.8%");
+                        height("44%");
                         interactOnClick("addLuogo(\"Garage\")");
-                        paddingLeft("3%");
 
+                    }});
+
+                    panel(new PanelBuilder("separator12"){{
+                        childLayoutHorizontal();
+                        backgroundColor("#0000");
+                        height("5%");
+                        width("0.1%");
                     }});
 
                     control(new ButtonBuilder("Sala del biliardo",""){{
                         name("button");
                         alignCenter();
                         valignBottom();
-                        width("5%");
-                        height("70%");
+                        width("4.8%");
+                        height("44%");
                         interactOnClick("addLuogo(\"Sala del biliardo\")");
-                        paddingLeft("3%");
 
+                    }});
+
+                    panel(new PanelBuilder("separator13"){{
+                        childLayoutHorizontal();
+                        backgroundColor("#0000");
+                        height("5%");
+                        width("0.1%");
                     }});
 
                     control(new ButtonBuilder("Camera da letto",""){{
@@ -305,75 +385,111 @@ public class GUI {
                         alignCenter();
                         valignTop();
                         width("5%");
-                        height("70%");
+                        height("44%");
                         interactOnClick("addLuogo(\"Camera da letto\")");
-                        paddingLeft("3%");
 
+                    }});
+
+                    panel(new PanelBuilder("separator14"){{
+                        childLayoutHorizontal();
+                        backgroundColor("#0000");
+                        height("5%");
+                        width("0.1%");
                     }});
 
                     control(new ButtonBuilder("Sala da pranzo",""){{
                         name("button");
                         alignCenter();
                         valignBottom();
-                        width("5%");
-                        height("70%");
+                        width("4.8%");
+                        height("44%");
                         interactOnClick("addLuogo(\"Sala da pranzo\")");
-                        paddingLeft("3%");
 
+                    }});
+
+                    panel(new PanelBuilder("separator15"){{
+                        childLayoutHorizontal();
+                        backgroundColor("#0000");
+                        height("5%");
+                        width("0.1%");
                     }});
 
                     control(new ButtonBuilder("Ingresso",""){{
                         name("button");
                         alignCenter();
                         valignTop();
-                        width("5%");
-                        height("70%");
+                        width("4.8%");
+                        height("44%");
                         interactOnClick("addLuogo(\"Ingresso\")");
-                        paddingLeft("3%");
 
+                    }});
+
+                    panel(new PanelBuilder("separator16"){{
+                        childLayoutHorizontal();
+                        backgroundColor("#0000");
+                        height("5%");
+                        width("0.1%");
                     }});
 
                     control(new ButtonBuilder("Cucina",""){{
                         name("button");
                         alignCenter();
                         valignBottom();
-                        width("5%");
-                        height("70%");
+                        width("4.8%");
+                        height("44%");
                         interactOnClick("addLuogo(\"Cucina\")");
                         paddingLeft("3%");
 
+                    }});
+
+                    panel(new PanelBuilder("separator17"){{
+                        childLayoutHorizontal();
+                        backgroundColor("#0000");
+                        height("5%");
+                        width("0.1%");
                     }});
 
                     control(new ButtonBuilder("Bagno",""){{
                         name("button");
                         alignCenter();
                         valignTop();
-                        width("5%");
-                        height("70%");
+                        width("4.8%");
+                        height("44%");
                         interactOnClick("addLuogo(\"Bagno\")");
-                        paddingLeft("3%");
 
+                    }});
+
+                    panel(new PanelBuilder("separator18"){{
+                        childLayoutHorizontal();
+                        backgroundColor("#0000");
+                        height("5%");
+                        width("0.1%");
                     }});
 
                     control(new ButtonBuilder("Salotto",""){{
                         name("button");
                         alignCenter();
                         valignBottom();
-                        width("5%");
-                        height("70%");
+                        width("4.8%");
+                        height("44%");
                         interactOnClick("addLuogo(\"Salotto\")");
-                        paddingLeft("3%");
 
+                    }});
+
+                    panel(new PanelBuilder("separator19"){{
+                        childLayoutHorizontal();
+                        backgroundColor("#0000");
+                        height("5%");
+                        width("0.1%");
                     }});
 
                     control(new ButtonBuilder("Studio",""){{
                         name("button");
                         alignCenter();
                         valignTop();
-                        width("5%");
-                        height("70%");
+                        width("4.8%");
+                        height("44%");
                         interactOnClick("addLuogo(\"Studio\")");
-                        paddingLeft("3%");
 
                     }});
 
