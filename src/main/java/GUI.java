@@ -31,7 +31,359 @@ public class GUI {
         startGameScreen();
         lobbyScreen();
         gameScreen();
+        predictionScreen();
         registrationFailedPopUp();
+    }
+
+    public void predictionScreen() {
+        nifty.addScreen("predictionScreen", new ScreenBuilder("predictionScreen") {{
+            controller(new GameController(client, nifty, cInfo, clientLogic));
+
+            layer(new LayerBuilder("background") {{
+                childLayoutVertical();
+                backgroundColor("#0000");
+                backgroundImage("Interface/predizione/background.jpeg");
+            }});
+
+            layer(new LayerBuilder("foreground") {{
+                childLayoutVertical();
+                backgroundColor("#0000");
+
+                //persone
+                panel(new PanelBuilder("Persone"){{
+                    childLayoutHorizontal();
+                    backgroundColor("#0000");
+                    height("25%");
+                    width("100%");
+
+                    text(new TextBuilder("tpersone"){{
+                        marginLeft("3%");
+                        text("Persone");
+                        font("Interface/Fonts/Default.fnt");
+                        backgroundColor("#0000");
+                        color("#ffff");
+                        height("30%");
+                        width("15%");
+                        onActiveEffect(new EffectBuilder("textSize"){{
+                            effectParameter("endSize", "2");
+                        }});
+                    }});
+
+                    control(new ButtonBuilder("Scarlett",""){{
+                        name("button");
+                        alignCenter();
+                        valignCenter();
+                        width("5%");
+                        height("70%");
+                        interactOnClick("addPersona(\"Scarlett\")");
+                        paddingLeft("3%");
+                    }});
+
+                    control(new ButtonBuilder("Green",""){{
+                        name("button");
+                        alignCenter();
+                        valignCenter();
+                        width("5%");
+                        height("70%");
+                        interactOnClick("addPersona(\"Green\")");
+                        paddingLeft("3%");
+                    }});
+
+                    control(new ButtonBuilder("Mustard",""){{
+                        name("button");
+                        alignCenter();
+                        valignCenter();
+                        width("5%");
+                        height("70%");
+                        interactOnClick("addPersona(\"Mustard\")");
+                        paddingLeft("3%");
+                    }});
+
+                    control(new ButtonBuilder("White",""){{
+                        name("button");
+                        alignCenter();
+                        valignCenter();
+                        width("5%");
+                        height("70%");
+                        interactOnClick("addPersona(\"White\")");
+                        paddingLeft("3%");
+                    }});
+
+                    control(new ButtonBuilder("Peacock",""){{
+                        name("button");
+                        alignCenter();
+                        valignCenter();
+                        width("5%");
+                        height("70%");
+                        interactOnClick("addPersona(\"Peacock\")");
+                        paddingLeft("3%");
+                    }});
+
+                    control(new ButtonBuilder("Plum",""){{
+                        name("button");
+                        alignCenter();
+                        valignCenter();
+                        width("5%");
+                        height("70%");
+                        interactOnClick("addPersona(\"Plum\")");
+                        paddingLeft("3%");
+                    }});
+
+
+
+
+                }});
+
+
+                //parte centrale
+                panel(new PanelBuilder("ArmiEAzioni"){{
+                    childLayoutHorizontal();
+                    backgroundColor("#0000");
+                    height("25%");
+                    width("100%");
+
+                    panel(new PanelBuilder("Armi"){{
+                        childLayoutHorizontal();
+                        backgroundColor("#0000");
+                        height("100%");
+                        width("80%");
+
+                        text(new TextBuilder("tarmi"){{
+                            marginLeft("3%");
+                            text("Armi");
+                            font("Interface/Fonts/Default.fnt");
+                            backgroundColor("#0000");
+                            color("#ffff");
+                            height("30%");
+                            width("15%");
+                            onActiveEffect(new EffectBuilder("textSize"){{
+                                effectParameter("endSize", "2");
+                            }});
+                        }});
+
+                        control(new ButtonBuilder("Candeliere",""){{
+                            name("button");
+                            alignCenter();
+                            valignCenter();
+                            width("5%");
+                            height("70%");
+                            interactOnClick("addArma(\"Candeliere\")");
+                            paddingLeft("3%");
+                        }});
+
+                        control(new ButtonBuilder("Pugnale",""){{
+                            name("button");
+                            alignCenter();
+                            valignCenter();
+                            width("5%");
+                            height("70%");
+                            interactOnClick("addArma(\"Pugnale\")");
+                            paddingLeft("3%");
+                        }});
+
+                        control(new ButtonBuilder("Tubo di piombo",""){{
+                            name("button");
+                            alignCenter();
+                            valignCenter();
+                            width("5%");
+                            height("70%");
+                            interactOnClick("addArma(\"Tubo di piombo\")");
+                            paddingLeft("3%");
+                        }});
+
+                        control(new ButtonBuilder("Pistola",""){{
+                            name("button");
+                            alignCenter();
+                            valignCenter();
+                            width("5%");
+                            height("70%");
+                            interactOnClick("addArma(\"Pistola\")");
+                            paddingLeft("3%");
+                        }});
+
+                        control(new ButtonBuilder("Corda",""){{
+                            name("button");
+                            alignCenter();
+                            valignCenter();
+                            width("5%");
+                            height("70%");
+                            interactOnClick("addArma(\"Corda\")");
+                            paddingLeft("3%");
+                        }});
+
+                        control(new ButtonBuilder("Chiave inglese",""){{
+                            name("button");
+                            alignCenter();
+                            valignCenter();
+                            width("5%");
+                            height("70%");
+                            interactOnClick("addArma(\"Chiave inglese\")");
+                            paddingLeft("3%");
+                        }});
+
+
+
+
+
+                    }});
+
+
+                    panel(new PanelBuilder("Azioni"){{
+                        paddingLeft("10%");
+                        childLayoutVertical();
+                        backgroundColor("#0000");
+                        height("100%");
+                        width("20%");
+
+                        control(new ButtonBuilder("effettuaPredizione","Invia predizione"){{
+                            name("button");
+                            alignCenter();
+                            valignCenter();
+                            width("80%");
+                            height("30%");
+                            interactOnClick("effettuaPredizione()");
+
+                        }});
+
+                        control(new ButtonBuilder("annullaPredizione","Annulla predizione"){{
+                            name("button");
+                            alignCenter();
+                            valignCenter();
+                            width("80%");
+                            height("30%");
+
+                        }});
+
+                    }});
+
+                }});
+
+                //luoghi
+                panel(new PanelBuilder("Luoghi"){{
+                    childLayoutHorizontal();
+                    backgroundColor("#0000");
+                    height("30%");
+                    width("20%");
+
+                    text(new TextBuilder("tluoghi"){{
+                        marginLeft("3%");
+                        text("Luoghi");
+                        font("Interface/Fonts/Default.fnt");
+                        backgroundColor("#0000");
+                        color("#ffff");
+                        height("30%");
+                        width("15%");
+                        onActiveEffect(new EffectBuilder("textSize"){{
+                            effectParameter("endSize", "2");
+                        }});
+                    }});
+
+                    control(new ButtonBuilder("Garage",""){{
+                        name("button");
+                        alignCenter();
+                        valignTop();
+                        width("5%");
+                        height("70%");
+                        interactOnClick("addLuogo(\"Garage\")");
+                        paddingLeft("3%");
+
+                    }});
+
+                    control(new ButtonBuilder("Sala del biliardo",""){{
+                        name("button");
+                        alignCenter();
+                        valignBottom();
+                        width("5%");
+                        height("70%");
+                        interactOnClick("addLuogo(\"Sala del biliardo\")");
+                        paddingLeft("3%");
+
+                    }});
+
+                    control(new ButtonBuilder("Camera da letto",""){{
+                        name("button");
+                        alignCenter();
+                        valignTop();
+                        width("5%");
+                        height("70%");
+                        interactOnClick("addLuogo(\"Camera da letto\")");
+                        paddingLeft("3%");
+
+                    }});
+
+                    control(new ButtonBuilder("Sala da pranzo",""){{
+                        name("button");
+                        alignCenter();
+                        valignBottom();
+                        width("5%");
+                        height("70%");
+                        interactOnClick("addLuogo(\"Sala da pranzo\")");
+                        paddingLeft("3%");
+
+                    }});
+
+                    control(new ButtonBuilder("Ingresso",""){{
+                        name("button");
+                        alignCenter();
+                        valignTop();
+                        width("5%");
+                        height("70%");
+                        interactOnClick("addLuogo(\"Ingresso\")");
+                        paddingLeft("3%");
+
+                    }});
+
+                    control(new ButtonBuilder("Cucina",""){{
+                        name("button");
+                        alignCenter();
+                        valignBottom();
+                        width("5%");
+                        height("70%");
+                        interactOnClick("addLuogo(\"Cucina\")");
+                        paddingLeft("3%");
+
+                    }});
+
+                    control(new ButtonBuilder("Bagno",""){{
+                        name("button");
+                        alignCenter();
+                        valignTop();
+                        width("5%");
+                        height("70%");
+                        interactOnClick("addLuogo(\"Bagno\")");
+                        paddingLeft("3%");
+
+                    }});
+
+                    control(new ButtonBuilder("Salotto",""){{
+                        name("button");
+                        alignCenter();
+                        valignBottom();
+                        width("5%");
+                        height("70%");
+                        interactOnClick("addLuogo(\"Salotto\")");
+                        paddingLeft("3%");
+
+                    }});
+
+                    control(new ButtonBuilder("Studio",""){{
+                        name("button");
+                        alignCenter();
+                        valignTop();
+                        width("5%");
+                        height("70%");
+                        interactOnClick("addLuogo(\"Studio\")");
+                        paddingLeft("3%");
+
+                    }});
+
+
+
+                }});
+
+            }});
+
+            }}.build(nifty));
     }
 
     public void registrationScreen(){

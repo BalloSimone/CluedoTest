@@ -32,9 +32,9 @@ public class ServerMain extends SimpleApplication {
 
     public static final List<Coord> startPositions = new ArrayList<Coord>(Arrays.asList(new Coord(2,2), new Coord(2,2), new Coord(2,2), new Coord(2,2), new Coord(2,2)));
 
-    private static String[] carte = {"Green", "Mustard", "white", "Peacock", "Plum", "Scarlett", "persone",
+    private static String[] carte = {"Green", "Mustard", "White", "Peacock", "Plum", "Scarlett", "persone",
             "Candeliere", "Pugnale", "Tubo di piombo", "Pistola", "Corda", "Chiave inglese", "armi",
-            "Sala da ballo", "Sala del biliardo", "Serra", "Sala da pranzo", "Ingresso", "Cucina", "Biblioteca", "Salotto", "Studio", "luoghi"};
+            "Garage", "Sala del biliardo", "Camera da letto", "Sala da pranzo", "Ingresso", "Cucina", "Bagno", "Salotto", "Studio", "luoghi"};
 
 
 

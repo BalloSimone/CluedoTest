@@ -305,6 +305,11 @@ public class GameApplication extends SimpleApplication {
 
                 break;
             }
+
+            case "predictionScreen": {
+
+            }
+
             default:
         }
     }
@@ -495,4 +500,5 @@ public class GameApplication extends SimpleApplication {
 
         }
     }
+
 }
