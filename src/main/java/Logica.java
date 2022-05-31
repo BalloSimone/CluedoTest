@@ -25,14 +25,21 @@ public class Logica {
 
     //mappa
     public static final String[][] mappa = {
-            {"w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w"},
-            {"w", "w", "w", "r", "w", "w", "w", "r", "w", "w", "w", "w", "w"},
-            {"w", "w", "e", "e", "e", "e", "e", "e", "e", "e", "e", "w", "w"},
-            {"w", "w", "e", "e", "e", "e", "e", "e", "e", "e", "e", "w", "w"},
-            {"w", "w", "e", "e", "e", "v", "e", "e", "e", "e", "e", "w", "w"},
-            {"w", "w", "e", "e", "e", "e", "e", "e", "e", "e", "e", "w", "w"},
-            {"w", "w", "w", "w", "r", "w", "w", "w", "r", "w", "w", "w", "w"},
-            {"w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w"}
+            {"w","w","w","r","w","w","w","w","w","w"},
+            {"w","e","e","e","e","r","w","w","w","w"},
+            {"r","e","e","e","e","w","w","w","w","w"},
+            {"w","w","e","e","e","e","e","e","e","r"},
+            {"w","w","e","e","e","e","e","e","e","w"},
+            {"w","e","e","e","e","e","e","e","w","w"},
+            {"w","e","e","e","e","e","e","e","w","w"},
+            {"w","e","e","w","w","e","w","e","r","w"},
+            {"r","e","e","e","e","v","e","e","w","w"},
+            {"w","e","e","w","w","e","w","e","w","w"},
+            {"w","e","e","e","e","e","e","e","e","w"},
+            {"w","e","e","e","e","e","e","e","e","r"},
+            {"r","e","e","e","e","e","e","e","e","w"},
+            {"w","w","w","e","e","e","e","w","w","w"},
+            {"w","w","w","w","r","r","w","w","w","w"}
     };
 
 
@@ -144,6 +151,7 @@ public class Logica {
 
     public void lanciaDadi()
     {
+
         numeroMosse = (int)(Math.random() * 10 + 2);
     }
 
@@ -164,7 +172,7 @@ public class Logica {
 
     public boolean movimento(Coord newPosition) {
         //cambiaMosse
-        if (newPosition.x < 8 && newPosition.x > -1 && newPosition.y < 13 && newPosition.y > -1 && !mappa[newPosition.x][newPosition.y].equals("w")) {
+        if (newPosition.x < 14 && newPosition.x > -1 && newPosition.y < 10 && newPosition.y > -1 && !mappa[newPosition.x][newPosition.y].equals("w")) {
             posizione.move(newPosition.x, newPosition.y);
             //cambia il numero di movimenti disponibili
             numeroMosse--;

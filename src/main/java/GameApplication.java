@@ -19,9 +19,11 @@ import com.jme3.system.JmeContext;
 import com.jme3.texture.*;
 import com.jme3.network.*;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.Size;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
+import de.lessvoid.nifty.tools.SizeValue;
 
 
 import java.awt.*;
@@ -160,8 +162,16 @@ public class GameApplication extends SimpleApplication {
             @Override
             public void onAction(String name, boolean isPressed, float tpf) {
                 if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1){
-                    if(logic.movimento(new Coord(logic.getMiaPosizione().x, logic.getMiaPosizione().y-1)))
+                    if(logic.movimento(new Coord(logic.getMiaPosizione().x-1, logic.getMiaPosizione().y))) {
                         client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo));
+
+
+                        double valore = getElement("p1").getConstraintY().getValue(100);
+                        valore = valore - 4.5;
+                        String newY = valore + "%";
+                        getElement("p1").setConstraintY(new SizeValue(newY));
+                        getElement("p1").getParent().layoutElements(); //aggiornare la grafica
+                    }
                 }
             }
         }, "avanti");
@@ -170,8 +180,15 @@ public class GameApplication extends SimpleApplication {
             @Override
             public void onAction(String name, boolean isPressed, float tpf) {
                 if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1 && logic.getNumeroMosse() > 0){
-                    if(logic.movimento(new Coord(logic.getMiaPosizione().x, logic.getMiaPosizione().y+1)))
+                    if(logic.movimento(new Coord(logic.getMiaPosizione().x+1, logic.getMiaPosizione().y))) {
                         client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo));
+
+                        double valore = getElement("p1").getConstraintY().getValue(100);
+                        valore = valore + 4.5;
+                        String newY = valore + "%";
+                        getElement("p1").setConstraintY(new SizeValue(newY));
+                        getElement("p1").getParent().layoutElements(); //aggiornare la grafica
+                    }
                 }
             }
         }, "indietro");
@@ -180,8 +197,16 @@ public class GameApplication extends SimpleApplication {
             @Override
             public void onAction(String name, boolean isPressed, float tpf) {
                 if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1 && logic.getNumeroMosse() > 0){
-                    if(logic.movimento(new Coord(logic.getMiaPosizione().x+1, logic.getMiaPosizione().y)))
+                    if(logic.movimento(new Coord(logic.getMiaPosizione().x, logic.getMiaPosizione().y+1))) {
                         client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo));
+
+                        double valore = getElement("p1").getConstraintX().getValue(100);
+                        valore = valore + 4.5;
+                        String newX = valore + "%";
+                        getElement("p1").setConstraintX(new SizeValue(newX));
+                        getElement("p1").getParent().layoutElements(); //aggiornare la grafica
+
+                    }
                 }
             }
         }, "destra");
@@ -190,8 +215,15 @@ public class GameApplication extends SimpleApplication {
             @Override
             public void onAction(String name, boolean isPressed, float tpf) {
                 if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1 && logic.getNumeroMosse() > 0){
-                    if(logic.movimento(new Coord(logic.getMiaPosizione().x-1, logic.getMiaPosizione().y)))
+                    if(logic.movimento(new Coord(logic.getMiaPosizione().x, logic.getMiaPosizione().y-1))) {
                         client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo));
+
+                        double valore = getElement("p1").getConstraintX().getValue(100);
+                        valore = valore - 4.5;
+                        String newX = valore + "%";
+                        getElement("p1").setConstraintX(new SizeValue(newX));
+                        getElement("p1").getParent().layoutElements(); //aggiornare la grafica
+                    }
                 }
             }
         }, "sinistra");

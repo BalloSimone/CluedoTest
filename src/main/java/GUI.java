@@ -1,4 +1,5 @@
 import com.jme3.network.Client;
+import com.jme3.opencl.Image;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.builder.*;
 import de.lessvoid.nifty.controls.Menu;
@@ -6,6 +7,8 @@ import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
 import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
 import de.lessvoid.nifty.tools.Color;
 import de.lessvoid.nifty.tools.SizeValue;
+
+import static de.lessvoid.nifty.render.RenderStateType.position;
 
 //classe grafica della graphical user interface
 public class GUI {
@@ -58,6 +61,7 @@ public class GUI {
 
                     text(new TextBuilder("tpersone"){{
                         marginLeft("3%");
+                        valignCenter();
                         text("Persone");
                         font("Interface/Fonts/Default.fnt");
                         backgroundColor("#0000");
@@ -1387,13 +1391,43 @@ public class GUI {
 
                     }});
 
+
+
                     panel(new PanelBuilder("MiddleMainPanel"){{
-                        childLayoutVertical();
+                        childLayoutHorizontal();
                         width("100%");
                         height("68%");
                         backgroundColor("#0000");
 
+                        panel(new PanelBuilder("MiddleMainPanelSeparator1"){{
+                            childLayoutVertical();
+                            width("16%");
+                            height("100%");
+                            backgroundColor("#0000");
+
+                        }});
+
+                        panel(new PanelBuilder("Map"){{
+                            childLayoutAbsoluteInside();
+                            width("68%");
+                            height("100%");
+                            backgroundColor("#0000");
+                            backgroundImage("Interface/mapp.jpg");
+
+
+                            image(new ImageBuilder("p1"){{
+                                width("4.8%");
+                                height("4.8%");
+                                x("32%");
+                                y("71.25%");
+                                filename("Interface/download.jpg");
+                            }});
+
+                        }});
+
                     }});
+
+
 
                     panel(new PanelBuilder("BottomActionPanel"){{
                         childLayoutHorizontal();

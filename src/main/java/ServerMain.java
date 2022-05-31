@@ -19,18 +19,25 @@ public class ServerMain extends SimpleApplication {
     DataDB database;
 
     public static final String[][] mappa = {
-            {"w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w"},
-            {"w", "w", "w", "r", "w", "w", "w", "r", "w", "w", "w", "w", "w"},
-            {"w", "w", "e", "e", "e", "e", "e", "e", "e", "e", "e", "w", "w"},
-            {"w", "w", "e", "e", "e", "e", "e", "e", "e", "e", "e", "w", "w"},
-            {"w", "w", "e", "e", "e", "v", "e", "e", "e", "e", "e", "w", "w"},
-            {"w", "w", "e", "e", "e", "e", "e", "e", "e", "e", "e", "w", "w"},
-            {"w", "w", "w", "w", "r", "w", "w", "w", "r", "w", "w", "w", "w"},
-            {"w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w", "w"}
+            {"w","w","w","r","w","w","w","w","w","w"},
+            {"w","e","e","e","e","r","w","w","w","w"},
+            {"r","e","e","e","e","w","w","w","w","w"},
+            {"w","w","e","e","e","e","e","e","e","r"},
+            {"w","w","e","e","e","e","e","e","e","w"},
+            {"w","e","e","e","e","e","e","e","w","w"},
+            {"w","e","e","e","e","e","e","e","w","w"},
+            {"w","e","e","w","w","e","w","e","r","w"},
+            {"r","e","e","e","e","v","e","e","w","w"},
+            {"w","e","e","w","w","e","w","e","w","w"},
+            {"w","e","e","e","e","e","e","e","e","w"},
+            {"w","e","e","e","e","e","e","e","e","r"},
+            {"r","e","e","e","e","e","e","e","e","w"},
+            {"w","w","w","e","e","e","e","w","w","w"},
+            {"w","w","w","w","r","r","w","w","w","w"}
     };
 
 
-    public static final List<Coord> startPositions = new ArrayList<Coord>(Arrays.asList(new Coord(2,2), new Coord(2,2), new Coord(2,2), new Coord(2,2), new Coord(2,2)));
+    public static final List<Coord> startPositions = new ArrayList<Coord>(Arrays.asList(new Coord(12,1), new Coord(12,1), new Coord(12,1), new Coord(12,1), new Coord(12,1)));
 
     private static String[] carte = {"Green", "Mustard", "White", "Peacock", "Plum", "Scarlett", "persone",
             "Candeliere", "Pugnale", "Tubo di piombo", "Pistola", "Corda", "Chiave inglese", "armi",
