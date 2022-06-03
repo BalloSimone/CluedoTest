@@ -1423,6 +1423,48 @@ public class GUI {
                                 filename("Interface/download.jpg");
                             }});
 
+                            image(new ImageBuilder("p2"){{
+                                width("4.8%");
+                                height("4.8%");
+                                x("32%");
+                                y("71.25%");
+                                filename("Interface/download.jpg");
+                            }});
+
+                            image(new ImageBuilder("p3"){{
+                                width("4.8%");
+                                height("4.8%");
+                                x("32%");
+                                y("71.25%");
+                                filename("Interface/download.jpg");
+                            }});
+
+                            image(new ImageBuilder("p4"){{
+                                width("4.8%");
+                                height("4.8%");
+                                x("32%");
+                                y("71.25%");
+                                filename("Interface/download.jpg");
+                            }});
+
+                            image(new ImageBuilder("p5"){{
+                                width("4.8%");
+                                height("4.8%");
+                                x("32%");
+                                y("71.25%");
+                                filename("Interface/download.jpg");
+                            }});
+
+                            image(new ImageBuilder("p6"){{
+                                width("4.8%");
+                                height("4.8%");
+                                x("32%");
+                                y("71.25%");
+                                filename("Interface/download.jpg");
+                            }});
+
+
+
                         }});
 
                     }});

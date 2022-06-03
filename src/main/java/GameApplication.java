@@ -18,6 +18,7 @@ import com.jme3.system.AppSettings;
 import com.jme3.system.JmeContext;
 import com.jme3.texture.*;
 import com.jme3.network.*;
+import com.mysql.cj.conf.ConnectionUrlParser;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.Size;
 import de.lessvoid.nifty.elements.Element;
@@ -163,14 +164,14 @@ public class GameApplication extends SimpleApplication {
             public void onAction(String name, boolean isPressed, float tpf) {
                 if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1){
                     if(logic.movimento(new Coord(logic.getMiaPosizione().x-1, logic.getMiaPosizione().y))) {
-                        client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo));
+                        client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo, logic.getNgiocatore()));
 
 
-                        double valore = getElement("p1").getConstraintY().getValue(100);
+                        double valore = getElement("p"+logic.getNgiocatore()).getConstraintY().getValue(100);
                         valore = valore - 4.5;
                         String newY = valore + "%";
-                        getElement("p1").setConstraintY(new SizeValue(newY));
-                        getElement("p1").getParent().layoutElements(); //aggiornare la grafica
+                        getElement("p"+logic.getNgiocatore()).setConstraintY(new SizeValue(newY));
+                        getElement("p"+logic.getNgiocatore()).getParent().layoutElements(); //aggiornare la grafica
                     }
                 }
             }
@@ -181,13 +182,13 @@ public class GameApplication extends SimpleApplication {
             public void onAction(String name, boolean isPressed, float tpf) {
                 if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1 && logic.getNumeroMosse() > 0){
                     if(logic.movimento(new Coord(logic.getMiaPosizione().x+1, logic.getMiaPosizione().y))) {
-                        client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo));
+                        client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo, logic.getNgiocatore()));
 
-                        double valore = getElement("p1").getConstraintY().getValue(100);
+                        double valore = getElement("p"+logic.getNgiocatore()).getConstraintY().getValue(100);
                         valore = valore + 4.5;
                         String newY = valore + "%";
-                        getElement("p1").setConstraintY(new SizeValue(newY));
-                        getElement("p1").getParent().layoutElements(); //aggiornare la grafica
+                        getElement("p"+logic.getNgiocatore()).setConstraintY(new SizeValue(newY));
+                        getElement("p"+logic.getNgiocatore()).getParent().layoutElements(); //aggiornare la grafica
                     }
                 }
             }
@@ -198,13 +199,13 @@ public class GameApplication extends SimpleApplication {
             public void onAction(String name, boolean isPressed, float tpf) {
                 if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1 && logic.getNumeroMosse() > 0){
                     if(logic.movimento(new Coord(logic.getMiaPosizione().x, logic.getMiaPosizione().y+1))) {
-                        client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo));
+                        client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo, logic.getNgiocatore()));
 
-                        double valore = getElement("p1").getConstraintX().getValue(100);
+                        double valore = getElement("p"+logic.getNgiocatore()).getConstraintX().getValue(100);
                         valore = valore + 4.5;
                         String newX = valore + "%";
-                        getElement("p1").setConstraintX(new SizeValue(newX));
-                        getElement("p1").getParent().layoutElements(); //aggiornare la grafica
+                        getElement("p"+logic.getNgiocatore()).setConstraintX(new SizeValue(newX));
+                        getElement("p"+logic.getNgiocatore()).getParent().layoutElements(); //aggiornare la grafica
 
                     }
                 }
@@ -216,13 +217,13 @@ public class GameApplication extends SimpleApplication {
             public void onAction(String name, boolean isPressed, float tpf) {
                 if (isPressed & logic.getMyTurn() & logic.getFaseTurno() == 1 && logic.getNumeroMosse() > 0){
                     if(logic.movimento(new Coord(logic.getMiaPosizione().x, logic.getMiaPosizione().y-1))) {
-                        client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo));
+                        client.send(new UtNetworking.sendMove(logic.getMiaPosizione(), cInfo, logic.getNgiocatore()));
 
-                        double valore = getElement("p1").getConstraintX().getValue(100);
+                        double valore = getElement("p"+logic.getNgiocatore()).getConstraintX().getValue(100);
                         valore = valore - 4.5;
                         String newX = valore + "%";
-                        getElement("p1").setConstraintX(new SizeValue(newX));
-                        getElement("p1").getParent().layoutElements(); //aggiornare la grafica
+                        getElement("p"+logic.getNgiocatore()).setConstraintX(new SizeValue(newX));
+                        getElement("p"+logic.getNgiocatore()).getParent().layoutElements(); //aggiornare la grafica
                     }
                 }
             }
@@ -276,12 +277,18 @@ public class GameApplication extends SimpleApplication {
                 //icone personaggi
                 try {
                     for (int i = 1; i <= 6; i++) {
-                        if (i <= usersInMyLobby.size())
+                        if (i <= usersInMyLobby.size()) {
                             getElement("IconUser" + i).setVisible(true);
-                        else
+                            getElement("p" + i).setVisible(true);
+                        }else {
                             getElement("IconUser" + i).setVisible(false);
+                            getElement("p" + i).setVisible(false);
+                        }
                     }
                 }catch(Exception e){}
+
+                //AGGIORNO LE POSIZIONI DEI GIOCATORI DAL PUNTO DI VISTA GRAFICO
+                updatePosition();
 
                 //se non è il mio turno non faccio niente
                 if(!logic.getMyTurn()){
@@ -344,6 +351,33 @@ public class GameApplication extends SimpleApplication {
 
             default:
         }
+    }
+
+    private void updatePosition() {
+
+        if(logic.getPosizioniAltriGiocatori() == null) return;
+
+        for (Map.Entry<Integer, Coord> pos : logic.getPosizioniAltriGiocatori().entrySet()) {
+
+            //calcolo le nuove coordinate
+            ConnectionUrlParser.Pair<String, String> newValues = obtainPosByCoord(pos.getValue().x, pos.getValue().y);
+            //setto le nuove coordinate
+            getElement("p"+pos.getKey()).setConstraintX(new SizeValue(newValues.left));
+            getElement("p"+pos.getKey()).setConstraintY(new SizeValue(newValues.right));
+
+            getElement("p"+pos.getKey()).getParent().layoutElements(); //aggiornare la grafica
+        }
+
+    }
+
+    private ConnectionUrlParser.Pair<String, String> obtainPosByCoord(int x, int y) {
+        final double xStart = 17.25;
+        final double yStart = 27.5;
+
+        double newX = xStart + (4.5 * x);
+        double newY = yStart + (4.5 * y);
+
+        return new ConnectionUrlParser.Pair<>(newY + "%", newX + "%");
     }
 
     private void nifty_changeText(String obj, String newValue) {
@@ -481,6 +515,8 @@ public class GameApplication extends SimpleApplication {
                 logic.setCarteInMano(mess.getCarteInMano());
                 //i client passano alla schermata di gioco
                 nifty.gotoScreen("Game");
+                //setto il numero del player
+                logic.setNgiocatore(mess.getNGiocatore());
 
                 //inizializzo a livello grafico l'interfaccia Game
 
@@ -496,16 +532,16 @@ public class GameApplication extends SimpleApplication {
                 logic.setCarteViste(mess.getCarteVisibili());
 
                 //mi salvo la mia posizione e le altre posizioni dei giocatori
-                HashMap<ClientInformation, Coord> posizioni = mess.getPosizioniAltriGiocatori();
+                HashMap<Integer, Coord> posizioni = mess.getPosizioniAltriGiocatori();
 
 
 
                 //mi salvo la mia posizione e quella degli altri giocatori
-                for(Map.Entry<ClientInformation, Coord> pos : posizioni.entrySet()){
-                    if(pos.getKey().getUsername().equals(cInfo.getUsername()))
+                for(Map.Entry<Integer, Coord> pos : posizioni.entrySet()){
+                    if(pos.getKey() == logic.getNgiocatore())
                         logic.setMiaPosizione(pos.getValue());
                     else
-                        logic.addPosizioniAltriGiocatori(pos.getKey().getUsername(), pos.getValue());
+                        logic.addPosizioniAltriGiocatori(pos.getKey(), pos.getValue());
                 }
 
 
@@ -526,7 +562,7 @@ public class GameApplication extends SimpleApplication {
                 System.out.println(mess.getClient().getUsername()+" si è spostato alle coordinate "+newPosition.x+" "+newPosition.y);
 
                 //aggiorno la posizione del giocatore che si è mosso
-                logic.getPosizioniAltriGiocatori().put(mess.getClient().getUsername(), newPosition);
+                logic.getPosizioniAltriGiocatori().put(mess.getnGiocatore(), newPosition);
 
             }
 

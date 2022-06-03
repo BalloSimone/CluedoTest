@@ -200,21 +200,25 @@ public class UtNetworking {
     @Serializable
     public static class InitForStartingGame extends AbstractMessage{  //inizializzazione carte giocatori
         private int nCarte;
+        private int nGiocatore;
         private List<String> carteInMano;
 
 
 
         public InitForStartingGame(){};
 
-        public InitForStartingGame(int nCarte, List<String> carteInMano){
+        public InitForStartingGame(int nCarte, List<String> carteInMano, int nGiocatore){
             this.nCarte = nCarte;
             this.carteInMano = carteInMano;
+            this.nGiocatore = nGiocatore;
         };
         //QUI CI VANNO LE INFORMAZIONI DELLA LOGICA DI FILO
 
         public int getNCarte(){
             return nCarte;
         }
+
+        public int getNGiocatore() {return nGiocatore+1;}
 
         public List<String> getCarteInMano(){
             return carteInMano;
@@ -229,18 +233,18 @@ public class UtNetworking {
     public static class setGameForStart extends AbstractMessage{  //scelta ordine turni e altre cose
         private ClientInformation firstUser;
         private List<String> carteVisibili;
-        private HashMap<ClientInformation, Coord> posizioniAltriGiocatori;
+        private HashMap<Integer, Coord> posizioniAltriGiocatori;
 
 
         public setGameForStart(){};
 
-        public setGameForStart(ClientInformation firstUser, List<String> carteVisibili, HashMap<ClientInformation, Coord> posizioniAltriGiocatori){
+        public setGameForStart(ClientInformation firstUser, List<String> carteVisibili, HashMap<Integer, Coord> posizioniAltriGiocatori){
            this.carteVisibili = carteVisibili;
            this.firstUser = firstUser;
            this.posizioniAltriGiocatori = posizioniAltriGiocatori;
         };
 
-        public HashMap<ClientInformation, Coord> getPosizioniAltriGiocatori(){
+        public HashMap<Integer, Coord> getPosizioniAltriGiocatori(){
             return posizioniAltriGiocatori;
         }
 
@@ -264,14 +268,18 @@ public class UtNetworking {
     public static class sendMove extends AbstractMessage{
         private Coord newPosition;
         private ClientInformation client;
+        private int nGiocatore;
 
 
         public sendMove(){};
 
-        public sendMove(Coord newPosition, ClientInformation client){
+        public sendMove(Coord newPosition, ClientInformation client, int nGiocatore){
             this.newPosition = newPosition;
             this.client = client;
+            this.nGiocatore = nGiocatore;
         };
+
+        public int getnGiocatore(){return nGiocatore;}
 
         public Coord getNewPosition() {
             return newPosition;

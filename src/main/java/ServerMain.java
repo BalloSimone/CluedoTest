@@ -216,6 +216,9 @@ public class ServerMain extends SimpleApplication {
         lobbyClass lobby = getLobbyById(idLobby);
         lobby.gameLobbyLogic = new LogicaServer(mappa, carte, lobby.userInLobbyInfo);
 
+        //DECIDO L'ORDINE DEI TURNI
+        lobby.gameLobbyLogic.setOrdineTurni();
+
         //ESTRAGGO LE CARTE VINCENTI
         lobby.gameLobbyLogic.estraiCarteVincenti();
 
@@ -232,22 +235,20 @@ public class ServerMain extends SimpleApplication {
                 carteInMano.add(lobby.gameLobbyLogic.mazzo.get(temp));
                 lobby.gameLobbyLogic.mazzo.remove(temp);
             }
-            gameServer.getConnection(user.cNetwork.getId()).send(new UtNetworking.InitForStartingGame(nCartePerGiocatore, carteInMano));
+            gameServer.getConnection(user.cNetwork.getId()).send(new UtNetworking.InitForStartingGame(nCartePerGiocatore, carteInMano, lobby.userInLobbyInfo.indexOf(user)));
         }
 
 
         //FACCIO VEDERE LE CARTE RIMANENTI A TUTTI I GIOCATORI
         List<String> carteRimanenti =  lobby.gameLobbyLogic.getCarteRimanenti();
 
-        //DECIDO L'ORDINE DEI TURNI
-        lobby.gameLobbyLogic.setOrdineTurni();
 
-        HashMap<ClientInformation, Coord> posizioni = new HashMap<>();
+        HashMap<Integer, Coord> posizioni = new HashMap<>();
 
         int cont = 0;
         //DECIDO LE POSIZIONI DI PARTENZA
         for (UserManager user:lobby.userInLobbyInfo) {
-            posizioni.put(user.cInfo, startPositions.get(cont));
+            posizioni.put(lobby.userInLobbyInfo.indexOf(user) + 1, startPositions.get(cont));
             cont++;
         }
 
@@ -379,7 +380,7 @@ public class ServerMain extends SimpleApplication {
                 //invio il messaggio
                 for (UserManager user:destinationHosts) {
                     if(user.cNetwork.getId() != source.getId())
-                        gameServer.getConnection(user.cNetwork.getId()).send(new UtNetworking.sendMove(newPosition, mess.getClient()));
+                        gameServer.getConnection(user.cNetwork.getId()).send(new UtNetworking.sendMove(newPosition, mess.getClient(), mess.getnGiocatore()));
                 }
 
 

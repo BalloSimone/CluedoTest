@@ -48,9 +48,10 @@ public class Logica {
     private List<Integer> note;
     private boolean isMyTurn;
     private Coord posizione;
-    private HashMap<String, Coord> posizioneAltriGiocatori;
+    private HashMap<Integer, Coord> posizioneAltriGiocatori;
     private int faseTurno;
     private Client client;
+    private int nGiocatore;
 
     //altre variabili
     private int numeroMosse;
@@ -74,21 +75,27 @@ public class Logica {
 
     /////////////////////////////////////////////////////////////////////////////
 
-    public HashMap<String, Coord> getPosizioniAltriGiocatori(){
+    public HashMap<Integer, Coord> getPosizioniAltriGiocatori(){
         return posizioneAltriGiocatori;
     }
 
-    public void initPosizioniAltriGiocatori(HashMap<String, Coord> posizioni){
+    public void initPosizioniAltriGiocatori(HashMap<Integer, Coord> posizioni){
         posizioneAltriGiocatori = posizioni;
     }
 
-    public void addPosizioniAltriGiocatori(String giocatore, Coord pos){
+    public void addPosizioniAltriGiocatori(Integer giocatore, Coord pos){
         posizioneAltriGiocatori.put(giocatore, pos);
     }
 
-    public void cambiaPosizioneAltroGiocatore(String giocatore, Coord newPosition){
+    public void cambiaPosizioneAltroGiocatore(Integer giocatore, Coord newPosition){
         posizioneAltriGiocatori.put(giocatore, newPosition);
     }
+
+    /////////////////////////////////////////////////////////////////////////////
+
+    public int getNgiocatore(){return nGiocatore;}
+
+    public void setNgiocatore(int nGioc){ this.nGiocatore = nGioc;}
 
     /////////////////////////////////////////////////////////////////////////////
 
