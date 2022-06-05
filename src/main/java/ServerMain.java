@@ -17,6 +17,8 @@ public class ServerMain extends SimpleApplication {
     Server gameServer;
     List<lobbyClass> activeLobbies = new LinkedList<lobbyClass>() {};
     DataDB database;
+    private int startIndex = 0;
+    private int indexPrediction = 0;
 
     public static final String[][] mappa = {
             {"w","w","w","r","w","w","w","w","w","w"},
@@ -94,6 +96,7 @@ public class ServerMain extends SimpleApplication {
 
 
 
+
     @Serializable
     public static class UserManager{
         ClientInformation cInfo;
@@ -104,6 +107,19 @@ public class ServerMain extends SimpleApplication {
             this.cNetwork = cNetwork;
         }
     }
+
+    /////////////////////////////////////////////////////////////////////////////
+
+    public int getStartIndex(){return startIndex;}
+    public void setStartIndex(int index){startIndex = index;}
+
+    /////////////////////////////////////////////////////////////////////////////
+
+    public int getIndexPrediction(){ return indexPrediction;}
+    public void setIndexPrediction(int index){indexPrediction = index;}
+
+    /////////////////////////////////////////////////////////////////////////////
+
 
     public static String[] getCarte(){
         return carte;
@@ -385,13 +401,32 @@ public class ServerMain extends SimpleApplication {
 
 
             }else if(m instanceof UtNetworking.sendCardRequest) {
+
                 UtNetworking.sendCardRequest mess = (UtNetworking.sendCardRequest) m;
+                List<String> carteRichieste = mess.getCarteRichieste();
+                ClientInformation client = mess.getClient();
+
+                lobbyClass lobby = getLobbyById(client.getMyLobbyId());
+                if(lobby == null) return;
 
 
+                for (UserManager user: lobby.userInLobbyInfo) {
+                    if(user.cInfo.getUsername().equals(client.getUsername())){
+                        setStartIndex(lobby.gameLobbyLogic.giocatori.indexOf(user));
+                        setIndexPrediction(lobby.gameLobbyLogic.giocatori.indexOf(user) + 1);
+                    }
+                }
 
+                if(lobby.gameLobbyLogic.giocatori.size() > indexPrediction) {
+                    gameServer.getConnection(lobby.userInLobbyInfo.get(indexPrediction).cNetwork.getId()).send(new UtNetworking.sendCardRequest());
+                }else {
+                    indexPrediction = 0;
+                    gameServer.getConnection(lobby.userInLobbyInfo.get(indexPrediction).cNetwork.getId()).send(new UtNetworking.sendCardRequest());
+                }
 
             }
         }
+
     }
 
 }

@@ -145,7 +145,8 @@ public class GameController extends BaseAppState implements ScreenController {
     }
 
     public void effettuaPredizione(){
-        clientHostConnected.send(new UtNetworking.sendCardRequest(logic.getCarteRichieste(), cInfo));
+        if(logic.getCarteRichieste().get(0) != null && logic.getCarteRichieste().get(1) != null && logic.getCarteRichieste().get(2) != null)
+            clientHostConnected.send(new UtNetworking.sendCardRequest(logic.getCarteRichieste(), cInfo));
     }
 
     /////////////////////////////////////////////////////////////////////////////
